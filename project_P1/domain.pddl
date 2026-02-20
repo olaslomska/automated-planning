@@ -1,15 +1,21 @@
-define domain p1
-(:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality)
+(define (domain p1)
+(:requirements :strips :typing)
 
-(:types location box )
+(:types 
+    location 
+    box 
+    content
+    person
+    drone)
 
-(define (domain domain_name)
-
-(:predicates
-)
-
-
-(:functions 
+(:predicates 
+    person-at ?person - person ?location - location
+    is-injured ?person - person ?injured - injured
+    box-at ?box - box ?location - location
+    content-box ?content - content ?box - box
+    has-content-person ?person - person ?content - content
+    drone-at ?drone - drone ?location - location
+    has-box-drone ?drone - drone ?box1 - box ?box2 - box
 )
 
 
