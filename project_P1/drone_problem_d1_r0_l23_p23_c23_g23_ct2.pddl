@@ -1,4 +1,4 @@
-(define (problem drone_problem_d1_r0_l17_p17_c17_g17_ct2)
+(define (problem drone_problem_d1_r0_l23_p23_c23_g23_ct2)
 (:domain p1)
 (:objects
 	drone1 - drone
@@ -20,6 +20,12 @@
 	loc15 - location
 	loc16 - location
 	loc17 - location
+	loc18 - location
+	loc19 - location
+	loc20 - location
+	loc21 - location
+	loc22 - location
+	loc23 - location
 	crate1 - crate
 	crate2 - crate
 	crate3 - crate
@@ -37,6 +43,12 @@
 	crate15 - crate
 	crate16 - crate
 	crate17 - crate
+	crate18 - crate
+	crate19 - crate
+	crate20 - crate
+	crate21 - crate
+	crate22 - crate
+	crate23 - crate
 	food - content
 	medicine - content
 	person1 - person
@@ -56,6 +68,12 @@
 	person15 - person
 	person16 - person
 	person17 - person
+	person18 - person
+	person19 - person
+	person20 - person
+	person21 - person
+	person22 - person
+	person23 - person
 	left right - arm
 )
 (:init
@@ -77,6 +95,12 @@
 	(crate-at crate15 depot)
 	(crate-at crate16 depot)
 	(crate-at crate17 depot)
+	(crate-at crate18 depot)
+	(crate-at crate19 depot)
+	(crate-at crate20 depot)
+	(crate-at crate21 depot)
+	(crate-at crate22 depot)
+	(crate-at crate23 depot)
 	(empty-arm left)
 	(empty-arm right)
 	(content-crate food crate1)
@@ -89,66 +113,90 @@
 	(content-crate food crate8)
 	(content-crate food crate9)
 	(content-crate food crate10)
-	(content-crate medicine crate11)
-	(content-crate medicine crate12)
-	(content-crate medicine crate13)
-	(content-crate medicine crate14)
-	(content-crate medicine crate15)
-	(content-crate medicine crate16)
-	(content-crate medicine crate17)
-	(person-at person1 loc15)
-	(person-at person2 loc10)
-	(person-at person3 loc11)
+	(content-crate food crate11)
+	(content-crate food crate12)
+	(content-crate food crate13)
+	(content-crate food crate14)
+	(content-crate food crate15)
+	(content-crate food crate16)
+	(content-crate food crate17)
+	(content-crate medicine crate18)
+	(content-crate medicine crate19)
+	(content-crate medicine crate20)
+	(content-crate medicine crate21)
+	(content-crate medicine crate22)
+	(content-crate medicine crate23)
+	(person-at person1 loc20)
+	(person-at person2 loc19)
+	(person-at person3 loc7)
 	(person-at person4 loc6)
-	(person-at person5 loc8)
-	(person-at person6 loc2)
-	(person-at person7 loc12)
-	(person-at person8 loc10)
-	(person-at person9 loc10)
-	(person-at person10 loc14)
-	(person-at person11 loc4)
-	(person-at person12 loc11)
-	(person-at person13 loc10)
-	(person-at person14 loc3)
-	(person-at person15 loc15)
-	(person-at person16 loc6)
-	(person-at person17 loc3)
+	(person-at person5 loc13)
+	(person-at person6 loc14)
+	(person-at person7 loc3)
+	(person-at person8 loc15)
+	(person-at person9 loc18)
+	(person-at person10 loc17)
+	(person-at person11 loc7)
+	(person-at person12 loc7)
+	(person-at person13 loc1)
+	(person-at person14 loc8)
+	(person-at person15 loc13)
+	(person-at person16 loc2)
+	(person-at person17 loc21)
+	(person-at person18 loc21)
+	(person-at person19 loc10)
+	(person-at person20 loc5)
+	(person-at person21 loc18)
+	(person-at person22 loc23)
+	(person-at person23 loc4)
 	(person-need person1 food)
 	(person-need person1 medicine)
-	(person-need person4 medicine)
-	(person-need person5 food)
-	(person-need person5 medicine)
+	(person-need person3 food)
+	(person-need person4 food)
 	(person-need person6 food)
+	(person-need person6 medicine)
 	(person-need person7 food)
-	(person-need person7 medicine)
 	(person-need person8 food)
 	(person-need person9 food)
-	(person-need person10 medicine)
-	(person-need person11 medicine)
+	(person-need person11 food)
+	(person-need person12 food)
 	(person-need person13 food)
+	(person-need person13 medicine)
 	(person-need person14 food)
 	(person-need person15 food)
-	(person-need person15 medicine)
 	(person-need person16 food)
+	(person-need person16 medicine)
+	(person-need person18 food)
+	(person-need person19 food)
+	(person-need person20 medicine)
+	(person-need person21 food)
+	(person-need person22 medicine)
+	(person-need person23 food)
 )
 (:goal (and
 	(drone-at drone1 depot)
 	(has-content-person person1 food)
 	(has-content-person person1 medicine)
-	(has-content-person person4 medicine)
-	(has-content-person person5 food)
-	(has-content-person person5 medicine)
+	(has-content-person person3 food)
+	(has-content-person person4 food)
 	(has-content-person person6 food)
+	(has-content-person person6 medicine)
 	(has-content-person person7 food)
-	(has-content-person person7 medicine)
 	(has-content-person person8 food)
 	(has-content-person person9 food)
-	(has-content-person person10 medicine)
-	(has-content-person person11 medicine)
+	(has-content-person person11 food)
+	(has-content-person person12 food)
 	(has-content-person person13 food)
+	(has-content-person person13 medicine)
 	(has-content-person person14 food)
 	(has-content-person person15 food)
-	(has-content-person person15 medicine)
 	(has-content-person person16 food)
+	(has-content-person person16 medicine)
+	(has-content-person person18 food)
+	(has-content-person person19 food)
+	(has-content-person person20 medicine)
+	(has-content-person person21 food)
+	(has-content-person person22 medicine)
+	(has-content-person person23 food)
 ))
 )
