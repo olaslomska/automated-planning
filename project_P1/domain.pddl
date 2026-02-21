@@ -3,28 +3,28 @@
 
 (:types 
     location 
-    box 
+    crate 
     content
     person
     drone
     arm
-)
+) 
 
 (:predicates 
     (person-at ?person - person ?location - location)
     (is-injured ?person - person)
-    (box-at ?box - box ?location - location)
-    (content-box ?content - content ?box - box)
+    (crate-at ?crate - crate ?location - location)
+    (content-crate ?content - content ?crate - crate)
     (has-content-person ?person - person ?content - content)
     (person-need ?person - person ?content - content)
     (drone-at ?drone - drone ?location - location)
-    (has-box-drone-arm ?arm - arm ?box - box)
+    (has-crate-drone-arm ?arm - arm ?crate - crate)
     (empty-arm ?arm - arm)
 )
 
-(:action pick-up-box
+(:action pick-up-crate
     :parameters (
-        ?box - box
+        ?crate - crate
         ?location - location
         ?drone - drone
         ?arm - arm
@@ -32,12 +32,12 @@
     :precondition (and 
         (empty-arm ?arm)                 
         (drone-at ?drone ?location)       
-        (box-at ?box ?location)           
+        (crate-at ?crate ?location)           
     )
     :effect (and
-        (has-box-drone-arm ?arm ?box)     
+        (has-crate-drone-arm ?arm ?crate)     
         (not (empty-arm ?arm))           
-        (not (box-at ?box ?location))     
+        (not (crate-at ?crate ?location))     
     )
 )
 
@@ -56,11 +56,11 @@
     )
 )
 
-(:action drop-box
+(:action drop-crate
     :parameters (
         ?location - location
         ?person - person
-        ?box - box
+        ?crate - crate
         ?arm - arm
         ?content - content
         ?drone - drone
@@ -68,12 +68,12 @@
     :precondition (and 
         (person-at ?person ?location)     
         (drone-at ?drone ?location)       
-        (has-box-drone-arm ?arm ?box)     
-        (content-box ?content ?box)       
+        (has-crate-drone-arm ?arm ?crate)     
+        (content-crate ?content ?crate)       
         (person-need ?person ?content)    
     )
     :effect (and 
-        (not (has-box-drone-arm ?arm ?box))   
+        (not (has-crate-drone-arm ?arm ?crate))   
         (has-content-person ?person ?content) 
         (empty-arm ?arm)                      
 )

@@ -258,7 +258,7 @@ def main():
         # Write the initial part of the problem
 
         f.write("(define (problem " + problem_name + ")\n")
-        f.write("(:domain drone-domain)\n")
+        f.write("(:domain p1)\n")
         f.write("(:objects\n")
 
         ######################################################################
@@ -277,7 +277,7 @@ def main():
             f.write("\t" + x + " - crate\n")
 
         for x in content_types:
-            f.write("\t" + x + " - contents\n")
+            f.write("\t" + x + " - content\n")
 
         for x in person:
             f.write("\t" + x + " - person\n")
@@ -285,14 +285,37 @@ def main():
         for x in carrier:
             f.write("\t" + x + " - carrier\n")
 
+        f.write("\tleft right - arm\n")
+
         f.write(")\n")
 
         ######################################################################
         # Generate an initial state
 
+        # TODO: Initialize all facts here!
         f.write("(:init\n")
 
-        # TODO: Initialize all facts here!
+        for d in drone:
+            f.write("\t(drone-at " + d + " depot)\n")
+        for c in crate:
+            f.write("\t(crate-at " + c + " depot)\n")
+
+        f.write("\t(empty-arm left)\n")
+        f.write("\t(empty-arm right)\n")
+
+        for x in range(len(content_types)):
+            content_name = content_types[x]
+            for crate_name in crates_with_contents[x]:
+                f.write("\t(content-crate " + content_name + " " + crate_name + ")\n")
+
+        for p in person:
+            loc = random.choice(location[1:]) 
+            f.write("\t(person-at " + p + " " + loc + ")\n")
+
+        for x in range(options.persons):
+            for y in range(len(content_types)):
+                if need[x][y]:
+                    f.write("\t(person-need " + person[x] + " " + content_types[y] + ")\n")
 
         f.write(")\n")
 
@@ -303,8 +326,8 @@ def main():
 
         # All Drones should end up at the depot
         for x in drone:
-            f.write("\n")
             # TODO: Write a goal that the drone x is at the depot
+            f.write("\t(drone-at " + x + " depot)\n")
 
         for x in range(options.persons):
             for y in range(len(content_types)):
@@ -313,10 +336,10 @@ def main():
                     content_name = content_types[y]
                     # TODO: write a goal that the person needs a crate
                     # with this specific content
+                    f.write("\t(has-content-person " + person_name + " " + content_name + ")\n")
 
-        f.write("\t))\n")
+        f.write("))\n")
         f.write(")\n")
-
 
 if __name__ == '__main__':
     main()
