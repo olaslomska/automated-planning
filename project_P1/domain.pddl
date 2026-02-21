@@ -7,17 +7,19 @@
     content
     person
     drone
-    arm)
+    arm
+)
 
 (:predicates 
-    person-at ?person - person ?location - location
-    is-injured ?person - person ?injured - injured
-    box-at ?box - box ?location - location
-    content-box ?content - content ?box - box
-    has-content-person ?person - person ?content - content
-    person-need ?person ?content
-    drone-at ?drone - drone ?location - location
-    has-box-drone-arm ?arm - arm ?box - box
+    (person-at ?person - person ?location - location)
+    (is-injured ?person - person)
+    (box-at ?box - box ?location - location)
+    (content-box ?content - content ?box - box)
+    (has-content-person ?person - person ?content - content)
+    (person-need ?person - person ?content - content)
+    (drone-at ?drone - drone ?location - location)
+    (has-box-drone-arm ?arm - arm ?box - box)
+    (empty-arm ?arm - arm)
 )
 
 (:action pick-up-box
@@ -28,12 +30,14 @@
         ?arm - arm
     )
     :precondition (and 
-    (or (not (has-box-drone-arm ?arm))) ; narazie zrobione jest tak, że trzeba sprecyzować które ramię
-    (box-at ?box ?location)
-    (drone-at ?drone ?location)
+        (empty-arm ?arm)                 
+        (drone-at ?drone ?location)       
+        (box-at ?box ?location)           
     )
-    :effect (
-        (has-box-drone-arm ?arm ?box)
+    :effect (and
+        (has-box-drone-arm ?arm ?box)     
+        (not (empty-arm ?arm))           
+        (not (box-at ?box ?location))     
     )
 )
 
@@ -44,10 +48,11 @@
         ?drone - drone
     )
     :precondition (and 
-    (drone-at ?drone ?location_from)
+        (drone-at ?drone ?location_from)  
     )
     :effect (and 
-        (box-at ?box ?location_to)
+        (not (drone-at ?drone ?location_from)) 
+        (drone-at ?drone ?location_to)         
     )
 )
 
@@ -61,17 +66,16 @@
         ?drone - drone
     )
     :precondition (and 
-    (person-at ?location)
-    (drone-at ?drone ?location)
-    (has-box-drone-arm ?arm ?box)
-    (not (has-content-person ?person ?content))
-    (content-box ?content ?box)
-    (person-need ?person ?content)
-    
+        (person-at ?person ?location)     
+        (drone-at ?drone ?location)       
+        (has-box-drone-arm ?arm ?box)     
+        (content-box ?content ?box)       
+        (person-need ?person ?content)    
     )
     :effect (and 
-    (not(has-box-drone-arm ?arm ?box))
-    (has-person-content ?person ?content)
-    )
+        (not (has-box-drone-arm ?arm ?box))   
+        (has-content-person ?person ?content) 
+        (empty-arm ?arm)                      
+)
 )
 )
