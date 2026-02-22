@@ -18,8 +18,8 @@
     (has-content-person ?person - person ?content - content)
     (person-need ?person - person ?content - content)
     (drone-at ?drone - drone ?location - location)
-    (has-crate-drone-arm ?arm - arm ?crate - crate)
-    (empty-arm ?arm - arm)
+    (has-crate-drone-arm ?drone - drone ?arm - arm ?crate - crate)
+    (empty-arm ?drone - drone ?arm - arm)
 )
 
 (:action pick-up-crate
@@ -30,13 +30,13 @@
         ?arm - arm
     )
     :precondition (and 
-        (empty-arm ?arm)                 
+        (empty-arm ?drone ?arm)                 
         (drone-at ?drone ?location)       
         (crate-at ?crate ?location)           
     )
     :effect (and
-        (has-crate-drone-arm ?arm ?crate)     
-        (not (empty-arm ?arm))           
+        (has-crate-drone-arm ?drone ?arm ?crate)     
+        (not (empty-arm ?drone ?arm))           
         (not (crate-at ?crate ?location))     
     )
 )
@@ -68,14 +68,14 @@
     :precondition (and 
         (person-at ?person ?location)     
         (drone-at ?drone ?location)       
-        (has-crate-drone-arm ?arm ?crate)     
+        (has-crate-drone-arm ?drone ?arm ?crate)     
         (content-crate ?content ?crate)       
         (person-need ?person ?content)    
     )
     :effect (and 
-        (not (has-crate-drone-arm ?arm ?crate))   
+        (not (has-crate-drone-arm ?drone ?arm ?crate))   
         (has-content-person ?person ?content) 
-        (empty-arm ?arm)                      
+        (empty-arm ?drone ?arm)                      
 )
 )
 )

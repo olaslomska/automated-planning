@@ -216,16 +216,14 @@ def main():
     drone = []
     person = []
     crate = []
-    carrier = []
     location = []
 
     location.append("depot")
+    location.append("warehouse")
     for x in range(options.locations):
         location.append("loc" + str(x + 1))
     for x in range(options.drones):
         drone.append("drone" + str(x + 1))
-    for x in range(options.carriers):
-        carrier.append("carrier" + str(x + 1))
     for x in range(options.persons):
         person.append("person" + str(x + 1))
     for x in range(options.crates):
@@ -282,9 +280,6 @@ def main():
         for x in person:
             f.write("\t" + x + " - person\n")
 
-        for x in carrier:
-            f.write("\t" + x + " - carrier\n")
-
         f.write("\tleft right - arm\n")
 
         f.write(")\n")
@@ -298,18 +293,20 @@ def main():
         for d in drone:
             f.write("\t(drone-at " + d + " depot)\n")
         for c in crate:
-            f.write("\t(crate-at " + c + " depot)\n")
+            f.write("\t(crate-at " + c + " warehouse)\n")
 
-        f.write("\t(empty-arm left)\n")
-        f.write("\t(empty-arm right)\n")
+        for d in drone:
+            f.write(f"\t(empty-arm {d} left)\n")
+            f.write(f"\t(empty-arm {d} right)\n")
 
         for x in range(len(content_types)):
             content_name = content_types[x]
             for crate_name in crates_with_contents[x]:
                 f.write("\t(content-crate " + content_name + " " + crate_name + ")\n")
 
+        service_locations = [loc for loc in location if loc not in ("depot", "warehouse")]
         for p in person:
-            loc = random.choice(location[1:]) 
+            loc = random.choice(service_locations)
             f.write("\t(person-at " + p + " " + loc + ")\n")
 
         for x in range(options.persons):
