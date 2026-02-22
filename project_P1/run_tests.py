@@ -32,7 +32,6 @@ while(runtime[-1] < 60.0):
 print(runtime)
 
 plt.plot(num, runtime, marker='o')
-plt.title('size of the problem and the time required to find a solution in the tests')
 plt.xlabel('Size')
 plt.ylabel('Time[s]')
 plt.show()
