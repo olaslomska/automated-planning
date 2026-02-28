@@ -1,4 +1,4 @@
-(define (problem drone_problem_d1_r0_l9_p9_c9_g9_ct2)
+(define (problem drone_problem_d1_r0_l12_p12_c12_g12_ct2)
 (:domain p1)
 (:objects
 	drone1 - drone
@@ -13,6 +13,9 @@
 	loc7 - location
 	loc8 - location
 	loc9 - location
+	loc10 - location
+	loc11 - location
+	loc12 - location
 	crate1 - crate
 	crate2 - crate
 	crate3 - crate
@@ -22,6 +25,9 @@
 	crate7 - crate
 	crate8 - crate
 	crate9 - crate
+	crate10 - crate
+	crate11 - crate
+	crate12 - crate
 	food - content
 	medicine - content
 	person1 - person
@@ -33,6 +39,9 @@
 	person7 - person
 	person8 - person
 	person9 - person
+	person10 - person
+	person11 - person
+	person12 - person
 	left right - arm
 )
 (:init
@@ -46,6 +55,9 @@
 	(crate-at crate7 warehouse)
 	(crate-at crate8 warehouse)
 	(crate-at crate9 warehouse)
+	(crate-at crate10 warehouse)
+	(crate-at crate11 warehouse)
+	(crate-at crate12 warehouse)
 	(empty-arm drone1 left)
 	(empty-arm drone1 right)
 	(content-crate food crate1)
@@ -57,35 +69,47 @@
 	(content-crate medicine crate7)
 	(content-crate medicine crate8)
 	(content-crate medicine crate9)
-	(person-at person1 loc9)
-	(person-at person2 loc2)
-	(person-at person3 loc8)
-	(person-at person4 loc9)
-	(person-at person5 loc9)
-	(person-at person6 loc3)
-	(person-at person7 loc5)
-	(person-at person8 loc3)
+	(content-crate medicine crate10)
+	(content-crate medicine crate11)
+	(content-crate medicine crate12)
+	(person-at person1 loc12)
+	(person-at person2 loc1)
+	(person-at person3 loc10)
+	(person-at person4 loc11)
+	(person-at person5 loc4)
+	(person-at person6 loc4)
+	(person-at person7 loc3)
+	(person-at person8 loc9)
 	(person-at person9 loc4)
+	(person-at person10 loc6)
+	(person-at person11 loc8)
+	(person-at person12 loc4)
 	(person-need person1 medicine)
-	(person-need person2 medicine)
 	(person-need person3 medicine)
-	(person-need person5 food)
+	(person-need person4 medicine)
 	(person-need person5 medicine)
 	(person-need person6 medicine)
 	(person-need person7 medicine)
+	(person-need person8 food)
 	(person-need person8 medicine)
 	(person-need person9 medicine)
+	(person-need person10 medicine)
+	(person-need person11 medicine)
+	(person-need person12 medicine)
 )
 (:goal (and
 	(drone-at drone1 depot)
 	(has-content-person person1 medicine)
-	(has-content-person person2 medicine)
 	(has-content-person person3 medicine)
-	(has-content-person person5 food)
+	(has-content-person person4 medicine)
 	(has-content-person person5 medicine)
 	(has-content-person person6 medicine)
 	(has-content-person person7 medicine)
+	(has-content-person person8 food)
 	(has-content-person person8 medicine)
 	(has-content-person person9 medicine)
+	(has-content-person person10 medicine)
+	(has-content-person person11 medicine)
+	(has-content-person person12 medicine)
 ))
 )
