@@ -13,7 +13,6 @@
     (crate-at crate1 warehouse)
     (content-crate food crate1)
     (drone-at drone1 depot)
-    (person-need person1 food)
     (empty-arm drone1 left)
     (empty-arm drone1 right)
 )

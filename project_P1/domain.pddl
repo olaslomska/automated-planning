@@ -69,8 +69,7 @@
         (person-at ?person ?location)     
         (drone-at ?drone ?location)       
         (has-crate-drone-arm ?drone ?arm ?crate)     
-        (content-crate ?content ?crate)       
-        (person-need ?person ?content)    
+        (content-crate ?content ?crate)          
     )
     :effect (and 
         (not (has-crate-drone-arm ?drone ?arm ?crate))   
