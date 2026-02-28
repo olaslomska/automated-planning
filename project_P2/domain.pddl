@@ -8,6 +8,7 @@
     person
     drone
     carrier
+    carrier_space
     num
 ) 
 
@@ -17,63 +18,73 @@
     (content-crate ?content - content ?crate - crate)
     (has-content-person ?person - person ?content - content)
     (drone-at ?drone - drone ?location - location)
-    (has-crate-drone-arm ?drone - drone ?arm - arm ?crate - crate)
-    (empty-arm ?drone - drone ?arm - arm)
+    (carrier-at ?carrier - carrier ?location - location)
+    (empty-space ?carrier - drone ?space - carrier_space)
+    (next ?numA ?numB - num)
+    (crate-at-space ?crate ?carrier ?carrier_space)
 )
 
-(:action pick-up-crate
+(:action put-crate-in-carrier
     :parameters (
         ?crate - crate
         ?location - location
         ?drone - drone
-        ?arm - arm
+        ?carrier - carrier
+        ?carrier_space - carrier_space
     )
-    :precondition (and 
-        (empty-arm ?drone ?arm)                 
+    :precondition (and                 
         (drone-at ?drone ?location)       
-        (crate-at ?crate ?location)           
+        (crate-at ?crate ?location)
+        (empty-space ?carrier ?carrier_space)           
     )
     :effect (and
-        (has-crate-drone-arm ?drone ?arm ?crate)     
-        (not (empty-arm ?drone ?arm))           
+        (not(empty-space ?carrier ?carrier_space))
+        (crate-at-space ?crate ?carrier ?carrier_space)        
         (not (crate-at ?crate ?location))     
     )
 )
+)
 
-(:action drone-move
+(:action move-carrier
     :parameters (
         ?location_from - location
         ?location_to - location
         ?drone - drone
+        ?carrier - carrier
     )
     :precondition (and 
-        (drone-at ?drone ?location_from)  
+        (drone-at ?drone ?location_from)
+        (carrier-at ?carrier ?location_from)  
     )
     :effect (and 
-        (not (drone-at ?drone ?location_from)) 
-        (drone-at ?drone ?location_to)         
+        (not (drone-at ?drone ?location_from))
+        (drone-at ?drone ?location_to)
+        (not (carrier-at ?carrier ?location_from))
+        (carrier-at ?carrier ?location_to)          
     )
 )
 
-(:action drop-crate
+(:action pick-and-drop
     :parameters (
-        ?location - location
-        ?person - person
         ?crate - crate
-        ?arm - arm
-        ?content - content
+        ?location - location
         ?drone - drone
+        ?carrier - carrier
+        ?carrier_space - carrier_space
+        ?person - person
     )
-    :precondition (and 
-        (person-at ?person ?location)     
+    :precondition (and                 
         (drone-at ?drone ?location)       
-        (has-crate-drone-arm ?drone ?arm ?crate)     
-        (content-crate ?content ?crate)          
+        (carrier-at ?carrier ?location)
+        (crate-at-space ?crate ?carrier ?carrier_space)
+        (person-at ?person ?location)           
     )
-    :effect (and 
-        (not (has-crate-drone-arm ?drone ?arm ?crate))   
-        (has-content-person ?person ?content) 
-        (empty-arm ?drone ?arm)                      
+    :effect (and
+        (empty-space ?carrier ?carrier_space)
+        (not(crate-at-space ?crate ?carrier ?carrier_space))        
+        (has-content-person  ?person ?content)     
+    )
 )
-)
-)
+
+
+
