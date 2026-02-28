@@ -3,7 +3,6 @@
 (:objects
 	drone1 - drone
 	depot - location
-	warehouse - location
 	loc1 - location
 	loc2 - location
 	loc3 - location
@@ -19,25 +18,22 @@
 )
 (:init
 	(drone-at drone1 depot)
-	(crate-at crate1 warehouse)
-	(crate-at crate2 warehouse)
-	(crate-at crate3 warehouse)
+	(crate-at crate1 depot)
+	(crate-at crate2 depot)
+	(crate-at crate3 depot)
 	(empty-arm drone1 left)
 	(empty-arm drone1 right)
 	(content-crate food crate1)
 	(content-crate food crate2)
 	(content-crate medicine crate3)
-	(person-at person1 loc2)
-	(person-at person2 loc2)
-	(person-at person3 loc3)
-	(person-need person1 food)
-	(person-need person1 medicine)
-	(person-need person3 food)
+	(person-at person1 loc1)
+	(person-at person2 loc1)
+	(person-at person3 loc2)
 )
 (:goal (and
 	(drone-at drone1 depot)
 	(has-content-person person1 food)
-	(has-content-person person1 medicine)
-	(has-content-person person3 food)
+	(has-content-person person2 food)
+	(has-content-person person2 medicine)
 ))
 )
