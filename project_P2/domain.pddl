@@ -7,7 +7,8 @@
     content
     person
     drone
-    arm
+    carrier
+    num
 ) 
 
 (:predicates 
