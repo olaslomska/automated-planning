@@ -1,4 +1,49 @@
 \documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% --- Definicja kolorów ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% --- Definicja języka PDDL ---
+\lstdefinelanguage{PDDL}{
+  sensitive=false,    % PDDL nie jest wrażliwy na wielkość liter
+  morecomment=[l]{;}, % Komentarze w PDDL zaczynają się od średnika
+  alsoletter={-,:},   % Zezwala na myślniki i dwukropki w słowach kluczowych
+  morekeywords={
+    define, domain, problem, and, or, not, imply, exists, forall, when,
+    increase, decrease, assign, scale-up, scale-down,
+    :domain, :requirements, :types, :constants, :predicates, :functions,
+    :action, :parameters, :precondition, :effect, 
+    :durative-action, :duration, :condition, 
+    :objects, :init, :goal, :metric
+  }
+}
+
+% --- Konfiguracja ogólnego stylu ---
+\lstset{
+  language=PDDL,
+  backgroundcolor=\color{backcolour},   
+  commentstyle=\color{codegreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
 
 \usepackage{graphicx}
 
@@ -12,6 +57,22 @@
 \maketitle
 
 \section{Exercise 1.1: Emergency Service Logistics, Initial Release}
+
+\begin{lstlisting}[caption={Outcome of the first problem - one person and one box}, label={lst:pddl-example}]
+( PICK-UP-CRATE CRATE1 DEPOT DRONE1 RIGHT )
+( DRONE-MOVE DEPOT ROOM1 DRONE1 )
+( DROP-CRATE ROOM1 PERSON1 CRATE1 RIGHT FOOD DRONE1 )
+
+\end{lstlisting}
+\begin{lstlisting}[caption={Outcome of the second problem - two people and three boxes}, label={lst:pddl-example}]
+( PICK-UP-CRATE CRATE1 DEPOT DRONE1 RIGHT )
+( PICK-UP-CRATE CRATE2 DEPOT DRONE1 LEFT )
+( DRONE-MOVE DEPOT ROOM1 DRONE1 )
+( DROP-CRATE ROOM1 PERSON1 CRATE1 RIGHT FOOD DRONE1 )
+( DROP-CRATE ROOM1 PERSON2 CRATE2 LEFT MEDICINE DRONE1 )
+
+\end{lstlisting}
+
 \section{Exercise 1.2: Problem Builder in Python}
 
 \begin{figure}[h]
