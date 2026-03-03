@@ -219,6 +219,7 @@ def main():
     location = []
     carrier = []
     carrier_space = ["space1", "space2", "space3", "space4"]
+    num = ["N0", "N1", "N2", "N3", "N4", "N5", "N6", "N7"]
 
     location.append("depot")
     for x in range(options.locations):
@@ -259,7 +260,7 @@ def main():
         # Write the initial part of the problem
 
         f.write("(define (problem " + problem_name + ")\n")
-        f.write("(:domain p1)\n")
+        f.write("(:domain p2)\n")
         f.write("(:objects\n")
 
         ######################################################################
@@ -288,6 +289,9 @@ def main():
 
         for x in carrier_space:
             f.write("\t" + x + " - carrier_space\n")
+
+        for x in num:
+            f.write("\t" + x + " - num\n")
     
 
         

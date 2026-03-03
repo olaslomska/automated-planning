@@ -1,4 +1,4 @@
-(define (domain p1)
+(define (domain p2)
 (:requirements :strips :typing)
 
 (:types 

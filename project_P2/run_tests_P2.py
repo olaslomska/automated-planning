@@ -8,12 +8,12 @@ runtime = [0.0]
 num = [3]
 while(runtime[-1] < 60.0):
     try:
-        program = subprocess.run(["python3","./generate-problem.py", "-d", "1", "-r", "0" ,"-l" ,f"{num[-1]}" ,"-p", f"{num[-1]}" ,"-c" ,f"{num[-1]}" ,"-g", f"{num[-1]}"], capture_output=True, text=True)
+        program = subprocess.run(["python3","./generate-problem_P2.py", "-d", "1", "-r", "1" ,"-l" ,f"{num[-1]}" ,"-p", f"{num[-1]}" ,"-c" ,f"{num[-1]}" ,"-g", f"{num[-1]}"], capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")
     start = time.perf_counter()
     try:
-        result = subprocess.run(["planutils", "run", "ff", "domain.pddl", f"drone_problem_d1_r0_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"], capture_output=True, text=True)
+        result = subprocess.run(["planutils", "run", "ff", "domain.pddl", f"drone_problem_d1_r1_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"], capture_output=True, text=True)
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")

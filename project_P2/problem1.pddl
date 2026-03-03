@@ -1,4 +1,4 @@
-(define (problem problem2) (:domain p1)
+(define (problem problem2) (:domain p2)
 (:objects 
     drone1 - drone
     crate1 - crate
