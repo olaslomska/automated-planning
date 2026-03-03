@@ -1,159 +1,132 @@
+INFO     planner time limit: None
+INFO     planner memory limit: None
 
-ff: parsing domain file
-domain 'P2' defined
- ... done.
-ff: parsing problem file
-problem 'DRONE_PROBLEM_D1_R1_L27_P27_C27_G27_CT2' defined
- ... done.
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: None
+INFO     translator memory limit: None
+INFO     translator command line string: /usr/bin/python3 /workspace/downward/builds/release/bin/translate/translate.py domain.pddl drone_problem_d1_r1_l3_p3_c3_g3_ct2.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.002s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.000s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.010s CPU, 0.003s wall-clock]
+Preparing model... [0.000s CPU, 0.000s wall-clock]
+Generated 31 rules.
+Computing model... [0.000s CPU, 0.001s wall-clock]
+199 relevant atoms
+105 auxiliary atoms
+304 final queue length
+396 total queue pushes
+Completing instantiation... [0.000s CPU, 0.001s wall-clock]
+Instantiating: [0.010s CPU, 0.006s wall-clock]
+Computing fact groups...
+Finding invariants...
+19 initial candidates
+Finding invariants: [0.000s CPU, 0.001s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+9 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.000s CPU, 0.002s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.000s CPU, 0.000s wall-clock]
+Translating task: [0.000s CPU, 0.001s wall-clock]
+12 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+6 propositions removed
+Detecting unreachable propositions: [0.000s CPU, 0.001s wall-clock]
+Reordering and filtering variables...
+12 of 15 variables necessary.
+0 of 6 mutex groups necessary.
+60 of 60 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.000s CPU, 0.000s wall-clock]
+Translator variables: 12
+Translator derived variables: 0
+Translator facts: 36
+Translator goal facts: 4
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 60
+Translator axioms: 0
+Translator task size: 396
+Translator peak memory: 32840 KB
+Writing output... [0.000s CPU, 0.001s wall-clock]
+Done! [0.010s CPU, 0.014s wall-clock]
+translate exit code: 0
 
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: None
+INFO     search memory limit: None
+INFO     search command line string: /workspace/downward/builds/release/bin/downward --search 'astar(lmcut())' --internal-plan-file sas_plan < output.sas
+[t=0.002297s, 12120 KB] reading input...
+[t=0.002895s, 12120 KB] done reading input!
+[t=0.005176s, 12384 KB] Initializing landmark cut heuristic...
+[t=0.005294s, 12384 KB] Building successor generator...done!
+[t=0.005362s, 12384 KB] peak memory difference for successor generator creation: 0 KB
+[t=0.005371s, 12384 KB] time for successor generation creation: 0.000032s
+[t=0.005380s, 12384 KB] Variables: 12
+[t=0.005392s, 12384 KB] FactPairs: 36
+[t=0.005400s, 12384 KB] Bytes per state: 4
+[t=0.005420s, 12384 KB] Conducting best first search with reopening closed nodes, (real) bound = 2147483647
+[t=0.005461s, 12384 KB] New best heuristic value for lmcut: 2
+[t=0.005492s, 12384 KB] g=0, 1 evaluated, 0 expanded
+[t=0.005504s, 12384 KB] f = 2, 1 evaluated, 0 expanded
+[t=0.005527s, 12384 KB] Initial heuristic value for lmcut: 2
+[t=0.005554s, 12384 KB] pruning method: none
+[t=0.006637s, 12384 KB] f = 3, 292 evaluated, 73 expanded
+[t=0.007321s, 12384 KB] New best heuristic value for lmcut: 1
+[t=0.007357s, 12384 KB] g=2, 491 evaluated, 271 expanded
+[t=0.008423s, 12516 KB] New best heuristic value for lmcut: 0
+[t=0.008470s, 12516 KB] g=3, 811 evaluated, 403 expanded
+[t=0.008491s, 12516 KB] Solution found!
+[t=0.008500s, 12516 KB] Actual search time: 0.002942s
+put-crate-in-carrier crate1 depot drone1 carrier1 space1 (0)
+put-crate-in-carrier crate2 depot drone1 carrier1 space2 (0)
+put-crate-in-carrier crate3 depot drone1 carrier1 space3 (0)
+move-carrier depot loc3 drone1 carrier1 (1)
+pick-and-drop crate2 loc3 drone1 carrier1 space2 person2 medicine (0)
+move-carrier loc3 loc1 drone1 carrier1 (1)
+pick-and-drop crate1 loc1 drone1 carrier1 space1 person1 food (0)
+pick-and-drop crate3 loc1 drone1 carrier1 space3 person3 medicine (0)
+move-carrier loc1 depot drone1 carrier1 (1)
+[t=0.008509s, 12516 KB] Plan length: 9 step(s).
+[t=0.008509s, 12516 KB] Plan cost: 3
+[t=0.008509s, 12516 KB] Expanded 404 state(s).
+[t=0.008509s, 12516 KB] Reopened 0 state(s).
+[t=0.008509s, 12516 KB] Evaluated 813 state(s).
+[t=0.008509s, 12516 KB] Evaluations: 813
+[t=0.008509s, 12516 KB] Generated 2055 state(s).
+[t=0.008509s, 12516 KB] Dead ends: 66 state(s).
+[t=0.008509s, 12516 KB] Expanded until last jump: 73 state(s).
+[t=0.008509s, 12516 KB] Reopened until last jump: 0 state(s).
+[t=0.008509s, 12516 KB] Evaluated until last jump: 292 state(s).
+[t=0.008509s, 12516 KB] Generated until last jump: 375 state(s).
+[t=0.008509s, 12516 KB] Number of registered states: 813
+[t=0.008509s, 12516 KB] Int hash set load factor: 813/1024 = 0.793945
+[t=0.008509s, 12516 KB] Int hash set resizes: 10
+[t=0.008509s, 12516 KB] Search time: 0.003090s
+[t=0.008509s, 12516 KB] Total time: 0.008509s
+Solution found.
+Peak memory: 12516 KB
+Remove intermediate file output.sas
+search exit code: 0
 
-
-Cueing down from goal distance:   43 into depth [1]
-                                  42            [1]
-                                  41            [1][2][3]
-                                  40            [1][2][3]
-
-Enforced Hill-climbing failed !
-switching to Best-first Search now.
-
-advancing to distance :   43
-                          42
-                          41
-                          40
-                          39
-                          38
-                          37
-                          36
-                          35
-                          34
-                          33
-                          32
-                          31
-                          30
-                          29
-                          28
-                          27
-                          26
-                          25
-                          24
-                          23
-                          22
-                          21
-                          20
-                          19
-                          18
-                          17
-                          16
-                          15
-                          14
-                          13
-                          12
-                          11
-                          10
-                           9
-                           8
-                           7
-                           6
-                           5
-                           4
-                           3
-                           2
-                           1
-                           0
-
-ff: found legal plan as follows
-
-step    0: PUT-CRATE-IN-CARRIER CRATE27 DEPOT DRONE1 CARRIER1 SPACE4
-        1: PUT-CRATE-IN-CARRIER CRATE18 DEPOT DRONE1 CARRIER1 SPACE3
-        2: MOVE-CARRIER DEPOT LOC26 DRONE1 CARRIER1
-        3: PICK-AND-DROP CRATE18 LOC26 DRONE1 CARRIER1 SPACE3 PERSON18 FOOD
-        4: MOVE-CARRIER LOC26 DEPOT DRONE1 CARRIER1
-        5: PUT-CRATE-IN-CARRIER CRATE17 DEPOT DRONE1 CARRIER1 SPACE3
-        6: MOVE-CARRIER DEPOT LOC21 DRONE1 CARRIER1
-        7: PICK-AND-DROP CRATE17 LOC21 DRONE1 CARRIER1 SPACE3 PERSON3 FOOD
-        8: MOVE-CARRIER LOC21 DEPOT DRONE1 CARRIER1
-        9: PUT-CRATE-IN-CARRIER CRATE16 DEPOT DRONE1 CARRIER1 SPACE3
-       10: MOVE-CARRIER DEPOT LOC9 DRONE1 CARRIER1
-       11: PICK-AND-DROP CRATE16 LOC9 DRONE1 CARRIER1 SPACE3 PERSON17 FOOD
-       12: MOVE-CARRIER LOC9 DEPOT DRONE1 CARRIER1
-       13: PUT-CRATE-IN-CARRIER CRATE15 DEPOT DRONE1 CARRIER1 SPACE3
-       14: MOVE-CARRIER DEPOT LOC8 DRONE1 CARRIER1
-       15: PICK-AND-DROP CRATE15 LOC8 DRONE1 CARRIER1 SPACE3 PERSON20 FOOD
-       16: MOVE-CARRIER LOC8 DEPOT DRONE1 CARRIER1
-       17: PUT-CRATE-IN-CARRIER CRATE14 DEPOT DRONE1 CARRIER1 SPACE3
-       18: PUT-CRATE-IN-CARRIER CRATE26 DEPOT DRONE1 CARRIER1 SPACE2
-       19: MOVE-CARRIER DEPOT LOC19 DRONE1 CARRIER1
-       20: PICK-AND-DROP CRATE26 LOC19 DRONE1 CARRIER1 SPACE2 PERSON1 MEDICINE
-       21: PICK-AND-DROP CRATE14 LOC19 DRONE1 CARRIER1 SPACE3 PERSON13 FOOD
-       22: MOVE-CARRIER LOC19 DEPOT DRONE1 CARRIER1
-       23: PUT-CRATE-IN-CARRIER CRATE13 DEPOT DRONE1 CARRIER1 SPACE3
-       24: PUT-CRATE-IN-CARRIER CRATE25 DEPOT DRONE1 CARRIER1 SPACE2
-       25: MOVE-CARRIER DEPOT LOC18 DRONE1 CARRIER1
-       26: PICK-AND-DROP CRATE25 LOC18 DRONE1 CARRIER1 SPACE2 PERSON8 MEDICINE
-       27: PICK-AND-DROP CRATE13 LOC18 DRONE1 CARRIER1 SPACE3 PERSON8 FOOD
-       28: MOVE-CARRIER LOC18 DEPOT DRONE1 CARRIER1
-       29: PUT-CRATE-IN-CARRIER CRATE12 DEPOT DRONE1 CARRIER1 SPACE3
-       30: PUT-CRATE-IN-CARRIER CRATE24 DEPOT DRONE1 CARRIER1 SPACE2
-       31: MOVE-CARRIER DEPOT LOC15 DRONE1 CARRIER1
-       32: PICK-AND-DROP CRATE24 LOC15 DRONE1 CARRIER1 SPACE2 PERSON22 MEDICINE
-       33: PICK-AND-DROP CRATE12 LOC15 DRONE1 CARRIER1 SPACE3 PERSON16 FOOD
-       34: PICK-AND-DROP CRATE27 LOC15 DRONE1 CARRIER1 SPACE4 PERSON26 MEDICINE
-       35: MOVE-CARRIER LOC15 DEPOT DRONE1 CARRIER1
-       36: PUT-CRATE-IN-CARRIER CRATE23 DEPOT DRONE1 CARRIER1 SPACE4
-       37: PUT-CRATE-IN-CARRIER CRATE11 DEPOT DRONE1 CARRIER1 SPACE3
-       38: PUT-CRATE-IN-CARRIER CRATE22 DEPOT DRONE1 CARRIER1 SPACE2
-       39: MOVE-CARRIER DEPOT LOC13 DRONE1 CARRIER1
-       40: PICK-AND-DROP CRATE22 LOC13 DRONE1 CARRIER1 SPACE2 PERSON11 MEDICINE
-       41: PICK-AND-DROP CRATE11 LOC13 DRONE1 CARRIER1 SPACE3 PERSON11 FOOD
-       42: MOVE-CARRIER LOC13 DEPOT DRONE1 CARRIER1
-       43: PUT-CRATE-IN-CARRIER CRATE10 DEPOT DRONE1 CARRIER1 SPACE3
-       44: PUT-CRATE-IN-CARRIER CRATE21 DEPOT DRONE1 CARRIER1 SPACE2
-       45: MOVE-CARRIER DEPOT LOC13 DRONE1 CARRIER1
-       46: PICK-AND-DROP CRATE21 LOC13 DRONE1 CARRIER1 SPACE2 PERSON14 MEDICINE
-       47: PICK-AND-DROP CRATE10 LOC13 DRONE1 CARRIER1 SPACE3 PERSON14 FOOD
-       48: MOVE-CARRIER LOC13 DEPOT DRONE1 CARRIER1
-       49: PUT-CRATE-IN-CARRIER CRATE9 DEPOT DRONE1 CARRIER1 SPACE3
-       50: PUT-CRATE-IN-CARRIER CRATE20 DEPOT DRONE1 CARRIER1 SPACE2
-       51: MOVE-CARRIER DEPOT LOC4 DRONE1 CARRIER1
-       52: PICK-AND-DROP CRATE20 LOC4 DRONE1 CARRIER1 SPACE2 PERSON9 MEDICINE
-       53: PICK-AND-DROP CRATE9 LOC4 DRONE1 CARRIER1 SPACE3 PERSON9 FOOD
-       54: MOVE-CARRIER LOC4 DEPOT DRONE1 CARRIER1
-       55: PUT-CRATE-IN-CARRIER CRATE8 DEPOT DRONE1 CARRIER1 SPACE3
-       56: PUT-CRATE-IN-CARRIER CRATE19 DEPOT DRONE1 CARRIER1 SPACE2
-       57: MOVE-CARRIER DEPOT LOC3 DRONE1 CARRIER1
-       58: PICK-AND-DROP CRATE19 LOC3 DRONE1 CARRIER1 SPACE2 PERSON24 MEDICINE
-       59: PICK-AND-DROP CRATE8 LOC3 DRONE1 CARRIER1 SPACE3 PERSON24 FOOD
-       60: MOVE-CARRIER LOC3 LOC1 DRONE1 CARRIER1
-       61: PICK-AND-DROP CRATE23 LOC1 DRONE1 CARRIER1 SPACE4 PERSON19 MEDICINE
-       62: MOVE-CARRIER LOC1 DEPOT DRONE1 CARRIER1
-       63: PUT-CRATE-IN-CARRIER CRATE7 DEPOT DRONE1 CARRIER1 SPACE4
-       64: MOVE-CARRIER DEPOT LOC1 DRONE1 CARRIER1
-       65: PICK-AND-DROP CRATE7 LOC1 DRONE1 CARRIER1 SPACE4 PERSON19 FOOD
-       66: MOVE-CARRIER LOC1 DEPOT DRONE1 CARRIER1
-       67: PUT-CRATE-IN-CARRIER CRATE6 DEPOT DRONE1 CARRIER1 SPACE4
-       68: PUT-CRATE-IN-CARRIER CRATE5 DEPOT DRONE1 CARRIER1 SPACE3
-       69: MOVE-CARRIER DEPOT LOC12 DRONE1 CARRIER1
-       70: PICK-AND-DROP CRATE5 LOC12 DRONE1 CARRIER1 SPACE3 PERSON5 FOOD
-       71: PICK-AND-DROP CRATE6 LOC12 DRONE1 CARRIER1 SPACE4 PERSON23 FOOD
-       72: MOVE-CARRIER LOC12 DEPOT DRONE1 CARRIER1
-       73: PUT-CRATE-IN-CARRIER CRATE4 DEPOT DRONE1 CARRIER1 SPACE4
-       74: PUT-CRATE-IN-CARRIER CRATE3 DEPOT DRONE1 CARRIER1 SPACE3
-       75: MOVE-CARRIER DEPOT LOC7 DRONE1 CARRIER1
-       76: PICK-AND-DROP CRATE3 LOC7 DRONE1 CARRIER1 SPACE3 PERSON21 FOOD
-       77: PICK-AND-DROP CRATE4 LOC7 DRONE1 CARRIER1 SPACE4 PERSON27 FOOD
-       78: MOVE-CARRIER LOC7 DEPOT DRONE1 CARRIER1
-       79: PUT-CRATE-IN-CARRIER CRATE2 DEPOT DRONE1 CARRIER1 SPACE4
-       80: PUT-CRATE-IN-CARRIER CRATE1 DEPOT DRONE1 CARRIER1 SPACE3
-       81: MOVE-CARRIER DEPOT LOC2 DRONE1 CARRIER1
-       82: PICK-AND-DROP CRATE1 LOC2 DRONE1 CARRIER1 SPACE3 PERSON4 FOOD
-       83: PICK-AND-DROP CRATE2 LOC2 DRONE1 CARRIER1 SPACE4 PERSON25 FOOD
-       84: MOVE-CARRIER LOC2 DEPOT DRONE1 CARRIER1
-     
-
-time spent:    0.00 seconds instantiating 6724 easy, 0 hard action templates
-               0.00 seconds reachability analysis, yielding 249 facts and 3808 actions
-               0.00 seconds creating final representation with 249 relevant facts
-               0.00 seconds building connectivity graph
-             145.94 seconds searching, evaluating 429897 states, to a max depth of 3
-             145.94 seconds total time
-
+INFO     Planner time: 0.26s

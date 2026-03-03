@@ -1,4 +1,4 @@
-(define (problem problem2) (:domain p2)
+(define (problem problem1) (:domain p2)
 (:objects 
     drone1 - drone
     crate1 - crate
@@ -37,10 +37,14 @@
     (next N4 N5)
     (next N5 N6)
     (next N6 N7)
+
+
 )
 
 (:goal (and
    (has-content-person person1 food)
    (has-content-person person2 medicine)
 ))
+
+(:metric minimize (total-cost))
 )

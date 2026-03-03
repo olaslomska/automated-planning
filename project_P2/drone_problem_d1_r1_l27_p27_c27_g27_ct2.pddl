@@ -219,4 +219,6 @@
 	(has-content-person person26 medicine)
 	(has-content-person person27 food)
 ))
+
+(:metric minimize (total-cost))
 )
