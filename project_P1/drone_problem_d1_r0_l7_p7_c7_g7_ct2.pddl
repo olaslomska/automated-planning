@@ -1,4 +1,4 @@
-(define (problem drone_problem_d1_r0_l12_p12_c12_g12_ct2)
+(define (problem drone_problem_d1_r0_l7_p7_c7_g7_ct2)
 (:domain p1)
 (:objects
 	drone1 - drone
@@ -10,11 +10,6 @@
 	loc5 - location
 	loc6 - location
 	loc7 - location
-	loc8 - location
-	loc9 - location
-	loc10 - location
-	loc11 - location
-	loc12 - location
 	crate1 - crate
 	crate2 - crate
 	crate3 - crate
@@ -22,11 +17,6 @@
 	crate5 - crate
 	crate6 - crate
 	crate7 - crate
-	crate8 - crate
-	crate9 - crate
-	crate10 - crate
-	crate11 - crate
-	crate12 - crate
 	food - content
 	medicine - content
 	person1 - person
@@ -36,11 +26,6 @@
 	person5 - person
 	person6 - person
 	person7 - person
-	person8 - person
-	person9 - person
-	person10 - person
-	person11 - person
-	person12 - person
 	left right - arm
 )
 (:init
@@ -52,11 +37,6 @@
 	(crate-at crate5 depot)
 	(crate-at crate6 depot)
 	(crate-at crate7 depot)
-	(crate-at crate8 depot)
-	(crate-at crate9 depot)
-	(crate-at crate10 depot)
-	(crate-at crate11 depot)
-	(crate-at crate12 depot)
 	(empty-arm drone1 left)
 	(empty-arm drone1 right)
 	(content-crate food crate1)
@@ -64,39 +44,24 @@
 	(content-crate food crate3)
 	(content-crate food crate4)
 	(content-crate food crate5)
-	(content-crate food crate6)
+	(content-crate medicine crate6)
 	(content-crate medicine crate7)
-	(content-crate medicine crate8)
-	(content-crate medicine crate9)
-	(content-crate medicine crate10)
-	(content-crate medicine crate11)
-	(content-crate medicine crate12)
-	(person-at person1 loc8)
-	(person-at person2 loc1)
+	(person-at person1 loc1)
+	(person-at person2 loc7)
 	(person-at person3 loc2)
-	(person-at person4 loc5)
-	(person-at person5 loc9)
-	(person-at person6 loc9)
-	(person-at person7 loc6)
-	(person-at person8 loc2)
-	(person-at person9 loc11)
-	(person-at person10 loc5)
-	(person-at person11 loc8)
-	(person-at person12 loc10)
+	(person-at person4 loc7)
+	(person-at person5 loc6)
+	(person-at person6 loc2)
+	(person-at person7 loc7)
 )
 (:goal (and
 	(drone-at drone1 depot)
-	(has-content-person person1 food)
 	(has-content-person person1 medicine)
 	(has-content-person person2 food)
-	(has-content-person person2 medicine)
 	(has-content-person person3 food)
-	(has-content-person person3 medicine)
 	(has-content-person person4 medicine)
 	(has-content-person person5 food)
 	(has-content-person person6 food)
-	(has-content-person person9 medicine)
-	(has-content-person person10 medicine)
-	(has-content-person person12 food)
+	(has-content-person person7 food)
 ))
 )

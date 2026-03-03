@@ -26,8 +26,8 @@
 	(content-crate food crate1)
 	(content-crate food crate2)
 	(content-crate medicine crate3)
-	(person-at person1 loc1)
-	(person-at person2 loc1)
+	(person-at person1 loc3)
+	(person-at person2 loc3)
 	(person-at person3 loc2)
 )
 (:goal (and
