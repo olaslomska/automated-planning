@@ -217,6 +217,8 @@ def main():
     person = []
     crate = []
     location = []
+    carrier = []
+    carrier_space = ["space1", "space2", "space3", "space4"]
 
     location.append("depot")
     for x in range(options.locations):
@@ -227,7 +229,9 @@ def main():
         person.append("person" + str(x + 1))
     for x in range(options.crates):
         crate.append("crate" + str(x + 1))
-    
+    for x in range(options.carriers):
+        carrier.append("carrier" + str(x + 1))
+
     # Determine the set of crates for each content.
     # If content_types[0] is "food",
     # then crates_with_contents[0] is a list
@@ -279,7 +283,14 @@ def main():
         for x in person:
             f.write("\t" + x + " - person\n")
 
-        f.write("\tleft right - arm\n")
+        for x in carrier:
+            f.write("\t" + x + " - carrier\n")
+
+        for x in carrier_space:
+            f.write("\t" + x + " - carrier_space\n")
+    
+
+        
 
         f.write(")\n")
 
@@ -294,9 +305,10 @@ def main():
         for c in crate:
             f.write("\t(crate-at " + c + " depot)\n")
 
-        for d in drone:
-            f.write(f"\t(empty-arm {d} left)\n")
-            f.write(f"\t(empty-arm {d} right)\n")
+        for c in carrier:
+                    f.write("\t(carrier-at " + c + " depot)\n")
+                    for s in carrier_space:
+                        f.write("\t(empty-space " + c + " " + s + ")\n")
 
         for x in range(len(content_types)):
             content_name = content_types[x]
