@@ -3,14 +3,14 @@
     drone1 - drone
     crate1 - crate
     person1 - person
-    room1 warehouse depot - location
+    room1 depot - location
     food medicine - content
     left right - arm
 )
 
 (:init
     (person-at person1 room1)
-    (crate-at crate1 warehouse)
+    (crate-at crate1 depot)
     (content-crate food crate1)
     (drone-at drone1 depot)
     (empty-arm drone1 left)

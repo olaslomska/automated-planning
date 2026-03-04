@@ -15,10 +15,6 @@
 	person2 - person
 	person3 - person
 	carrier1 - carrier
-	space1 - carrier_space
-	space2 - carrier_space
-	space3 - carrier_space
-	space4 - carrier_space
 	N0 - num
 	N1 - num
 	N2 - num
@@ -34,21 +30,26 @@
 	(crate-at crate2 depot)
 	(crate-at crate3 depot)
 	(carrier-at carrier1 depot)
-	(empty-space carrier1 space1)
-	(empty-space carrier1 space2)
-	(empty-space carrier1 space3)
-	(empty-space carrier1 space4)
+	(carrier-capacity carrier1 N4)
+	(crates-in-carrier carrier1 N0)
 	(content-crate food crate1)
 	(content-crate food crate2)
 	(content-crate medicine crate3)
 	(person-at person1 loc1)
-	(person-at person2 loc2)
-	(person-at person3 loc1)
+	(person-at person2 loc3)
+	(person-at person3 loc2)
+	(next-num N0 N1)
+	(next-num N1 N2)
+	(next-num N2 N3)
+	(next-num N3 N4)
+	(next-num N4 N5)
+	(next-num N5 N6)
+	(next-num N6 N7)
 )
 (:goal (and
 	(drone-at drone1 depot)
-	(has-content-person person1 medicine)
 	(has-content-person person2 food)
+	(has-content-person person2 medicine)
 	(has-content-person person3 food)
 ))
 )

@@ -218,7 +218,6 @@ def main():
     crate = []
     location = []
     carrier = []
-    carrier_space = ["space1", "space2", "space3", "space4"]
     num = ["N0", "N1", "N2", "N3", "N4", "N5", "N6", "N7"]
 
     location.append("depot")
@@ -287,13 +286,8 @@ def main():
         for x in carrier:
             f.write("\t" + x + " - carrier\n")
 
-        for x in carrier_space:
-            f.write("\t" + x + " - carrier_space\n")
-
         for x in num:
             f.write("\t" + x + " - num\n")
-    
-
         
 
         f.write(")\n")
@@ -304,22 +298,14 @@ def main():
         # TODO: Initialize all facts here!
         f.write("(:init\n")
 
-        f.write("\t(= (total-cost) 0)\n")
-
-        for i in range(len(location)):
-            for j in range(len(location)):
-                cost = flight_cost(location_coords, i, j)
-                f.write(f"\t(= (fly-cost {location[i]} {location[j]}) {cost})\n")
-
         for d in drone:
             f.write("\t(drone-at " + d + " depot)\n")
         for c in crate:
             f.write("\t(crate-at " + c + " depot)\n")
-
         for c in carrier:
-                    f.write("\t(carrier-at " + c + " depot)\n")
-                    for s in carrier_space:
-                        f.write("\t(empty-space " + c + " " + s + ")\n")
+             f.write("\t(carrier-at " + c + " depot)\n")
+             f.write("\t(carrier-capacity " + c + " N4)\n")
+             f.write("\t(crates-in-carrier " + c + " N0)\n")
 
         for x in range(len(content_types)):
             content_name = content_types[x]
@@ -330,6 +316,9 @@ def main():
         for p in person:
             loc = random.choice(people_locations)
             f.write("\t(person-at " + p + " " + loc + ")\n")
+
+        for i in range(len(num) - 1):
+            f.write("\t(next-num " + num[i] + " " + num[i+1] + ")\n")
 
         f.write(")\n")
 
@@ -352,10 +341,7 @@ def main():
                     # with this specific content
                     f.write("\t(has-content-person " + person_name + " " + content_name + ")\n")
 
-        f.write("))\n")
-    
-        f.write("(:metric minimize (total-cost))\n")
-        
+        f.write("))\n") 
         f.write(")\n")
 
 if __name__ == '__main__':

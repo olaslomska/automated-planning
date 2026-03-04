@@ -8,7 +8,6 @@
     person
     drone
     carrier
-    carrier_space
     num
 ) 
 
@@ -19,14 +18,10 @@
     (has-content-person ?person - person ?content - content)
     (drone-at ?drone - drone ?location - location)
     (carrier-at ?carrier - carrier ?location - location)
-    (empty-space ?carrier - carrier ?space - carrier_space)
-    (next ?numA - num ?numB - num) 
-    (crate-at-space ?crate - crate ?carrier - carrier ?space - carrier_space) 
-)
-
-(:functions
-    (total-cost)
-    (fly-cost ?location_from - location ?location_to - location)    
+    (next-num ?numA - num ?numB - num) 
+    (in-carrier ?crate - crate ?carrier - carrier)
+    (crates-in-carrier ?carrier - carrier ?n - num)
+    (carrier-capacity ?carrier - carrier ?n - num)
 )
 
 (:action put-crate-in-carrier
@@ -35,19 +30,21 @@
         ?location - location
         ?drone - drone
         ?carrier - carrier
-        ?carrier_space - carrier_space
+        ?n_current - num
+        ?n_next - num
     )
     :precondition (and                 
         (drone-at ?drone ?location)       
         (crate-at ?crate ?location)
         (carrier-at ?carrier ?location) 
-        (empty-space ?carrier ?carrier_space)           
+        (crates-in-carrier ?carrier ?n_current)
+        (next-num ?n_current ?n_next)
     )
     :effect (and
-        (not (empty-space ?carrier ?carrier_space))
-        (crate-at-space ?crate ?carrier ?carrier_space)        
-        (not (crate-at ?crate ?location))  
-        (increase (total-cost) 1)   
+        (not (crates-in-carrier ?carrier ?n_current))
+        (crates-in-carrier ?carrier ?n_next)
+        (in-carrier ?crate ?carrier)        
+        (not (crate-at ?crate ?location))    
     )
 )
 
@@ -66,8 +63,7 @@
         (not (drone-at ?drone ?location_from))
         (drone-at ?drone ?location_to)
         (not (carrier-at ?carrier ?location_from))
-        (carrier-at ?carrier ?location_to)
-        (increase (total-cost) (fly-cost ?location_from ?location_to))        
+        (carrier-at ?carrier ?location_to)     
     )
 )
 
@@ -77,22 +73,25 @@
         ?location - location
         ?drone - drone
         ?carrier - carrier
-        ?carrier_space - carrier_space
         ?person - person
         ?content - content 
+        ?n_current - num
+        ?n_prev - num
     )
     :precondition (and                 
         (drone-at ?drone ?location)       
         (carrier-at ?carrier ?location)
-        (crate-at-space ?crate ?carrier ?carrier_space)
+        (in-carrier ?crate ?carrier)
         (person-at ?person ?location)           
         (content-crate ?content ?crate) 
+        (crates-in-carrier ?carrier ?n_current)
+        (next-num ?n_prev ?n_current)
     )
     :effect (and
-        (empty-space ?carrier ?carrier_space)
-        (not (crate-at-space ?crate ?carrier ?carrier_space))        
+        (not (crates-in-carrier ?carrier ?n_current))
+        (crates-in-carrier ?carrier ?n_prev)
+        (not (in-carrier ?crate ?carrier))        
         (has-content-person ?person ?content)   
-        (increase (total-cost) 1)  
     )
 )
-) 
+)

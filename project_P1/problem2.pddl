@@ -6,7 +6,7 @@
     crate3 - crate
     person1 - person
     person2 - person
-    room1 warehouse depot - location
+    room1 depot - location
     food medicine - content
     left right - arm
 )
@@ -14,9 +14,9 @@
 (:init
     (person-at person1 room1)
     (person-at person2 room1)
-    (crate-at crate1 warehouse)
-    (crate-at crate2 warehouse)
-    (crate-at crate3 warehouse)
+    (crate-at crate1 depot)
+    (crate-at crate2 depot)
+    (crate-at crate3 depot)
     (content-crate food crate1)
     (content-crate medicine crate2)
     (content-crate food crate3)
