@@ -33,7 +33,7 @@
 (:goal (and
 	(drone-at drone1 depot)
 	(has-content-person person2 food)
+	(has-content-person person2 medicine)
 	(has-content-person person3 food)
-	(has-content-person person3 medicine)
 ))
 )

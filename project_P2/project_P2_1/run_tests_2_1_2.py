@@ -24,7 +24,7 @@ print(f"{'Algorithm':<10} | {'Heuristic':<10} | {'Time (s)':<10} | {'Plan Length
 
 for search_alg, heuristic in test_configs:
     
-    command = ["pyperplan", "-s", search_alg]
+    command = ["python3","-m", "pyperplan", "-s", search_alg]
     if heuristic:
         command.extend(["-H", heuristic])
         heur_label = heuristic.upper()

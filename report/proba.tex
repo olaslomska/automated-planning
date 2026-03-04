@@ -86,25 +86,82 @@
 
 \section{Exercise 1.3: Performance Comparison of Search Algorithms and
 Heuristics}
-
 \subsection{First Part}
+
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 \textbf{Algorithm} & \textbf{Heuristic} & \textbf{Largest Solved Size} & \textbf{Time (s)} & \textbf{Plan Length} & \textbf{Optimal} \\ \hline
-BFS & None & 7 & 21.07 & 23 & Yes \\ \hline
-IDS & None & 3 & 0.43 & 10 & Yes \\ \hline
-A* & hMAX & 5 & 6.51 & 16 & Yes \\ \hline
-GBFS & hMAX & 7 & 8.66 & 26 & No \\ \hline
+BFS & None & 7 & 24.59 & 22 & Yes \\ \hline
+IDS & None & 3 & 0.71 & 10 & Yes \\ \hline
+A* & hMAX & 5 & 9.95 & 17 & Yes \\ \hline
+GBFS & hMAX & 7 & 10.94 & 26 & No \\ \hline
 \end{tabular}
 \caption{Performance Comparison of Search Algorithms and Heuristics (Exercise 1.3.1)}
 \label{tab:results_1_3_1}
 \end{table}
 The results of the performance of every algorithm show that only GBFS with heuristic hMAX is not optimal. The reason for that is the longest plan length. This is because GBFS relies on the heuristic to rush toward the goal quickly rather than exhaustively searching for the perfect path. The same size of the problem was solved by the BFS algorithm without any heuristics. However, it took more time, because it blindly checks every possible combination of moves. On the other hand, the A* algorithm only reached size 5 because the calculation of the hMAX heuristic for every node caused it to time out. Algorithm IDS solved the smallest problem of them all. IDS intentionally wipes its memory and starts over every time it increases its search depth, so it concentrates on memory efficiency.
 
-In this part every action in domain file has the same cost, that is why algorithms like BFS guarantee the shortest path by expanding all nodes at the current search depth before moving deeper. Secondly, at every step, the drone has many valid moves, which creates many possibilities, which can  cause problems for some algorithms like BFS. 
+In this part every action in domain file has the same cost, that is why algorithms like BFS guarantee the shortest path by expanding all nodes at the current search depth before moving deeper. Secondly, at every step, the drone has many valid moves, which creates many possibilities, which can  cause problems for some algorithms like BFS.
 \subsection{Second Part}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Algorithm} & \textbf{Heuristic} & \textbf{Time (s)} & \textbf{Plan Length} \\ \hline
+GBFS & NONE & 0.37 & 26\\ \hline
+GBFS & hMAX & 10.68 & 26 \\ \hline
+GBFS & hFF & 0.28 & 26 \\ \hline
+GBFS & hADD & 0.35 & 27 \\ \hline
+GBFS & LANDMARK & 0.29 & 28 \\ \hline
+EHC & NONE & 0.31 & 28 \\ \hline
+EHC & hMAX & Timeout & $>$ 60s \\ \hline
+EHC & hFF & 0.39 & 28 \\ \hline
+EHC & hADD & 0.44 & 28 \\ \hline
+EHC & LANDMARK & 0.27 & 31 \\ \hline
+\end{tabular}
+\caption{Performance Comparison of GBFS and EHC with Various Heuristics (Exercise 1.3.2)}
+\label{tab:results_1_3_2}
+\end{table}
+Based on the results from Exercise 1.3.1, the largest problem that Greedy Best-First Search (GBFS) could handle within the 1-minute time limit was size 7. This problem size was generated and tested for the algorithms GBFS and EHC with heuristics hMAX, hFF, hADD and Landmark. Only algorithm EHC with heuristic hMAX exceeded the time limit. The GBFS solved a size 7 problem with hMAX in under 11 seconds.
+
+EHC is more memory-efficient than GBFS, since it discards alternative paths once it makes a choice. It causes the algorithm to be fast and use minimal memory. However, it causes problems when the chosen path reaches dead-end, since it can't go back. The GBFS keeps all values in memory, so it can return if the path is unpromising, but at cost of taking much more memory. 
+
+The FF planer intelligently combines the strengths of both algorithms to maximize speed and reliability.
+The FF planner primarily relies on EHC paired with the hFF heuristic. However, if EHC gets trapped in a dead-end, the planner automatically changes to GBFS. The result of that is the planner can backtrack out of the dead-end, guaranteeing that a solution will eventually be found.
+
+
+\subsection{Third Part}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Algorithm} & \textbf{Heuristic} & \textbf{Time (s)} & \textbf{Plan Length} \\ \hline
+A* & NONE & 6.51 & 17 \\ \hline
+BFS & NONE & 0.77 & 17 \\ \hline
+IDS & NONE & Timeout & $>$ 60s \\ \hline
+A* & hMAX & 9.18 & 17 \\ \hline
+A* & LMCUT & 47.76 & 17 \\ \hline
+\end{tabular}
+\caption{Performance of Optimal Planners and Admissible Heuristics (Exercise 1.3.3)}
+\label{tab:results_1_3_3}
+\end{table}
+An admissible heuristic is one that never overestimates the true cost to reach the goal, guaranteeing that an algorithm like A* will find an optimal solution. Among the heuristics implemented in Pyperplan, hMAX and LMCUT (Landmark-Cut) are admissible.
+
+The results show that almost every algorithm has the plan length equal to 17. The best-performing algorithm was BFS without any heuristics. The reason for that is the same cost for every action. Moreover, adding the heuristics to algorithm A* resulted in exceeding the time about 1.4 times for hMAX, and over 7 times for LMCUT. It is because  of the necesity to calculate these complex heuristics at every node.
+
+Finally, IDS timed out because a plan length of 17 steps requires it to wipe its memory and completely regenerate the search tree from scratch 17 times, which causes to exceed the 1-minute limit.
+
+\section{Exercise 2.1: Problem Builder in Python}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Figure_2} 
+    \caption{Size of the problem and the time required to find a solution in the tests}
+    \label{fig:figure2}
+\end{figure}
 
 \begin{table}[H]
 \centering
@@ -122,18 +179,10 @@ EHC & hFF & 0.21 & 27 \\ \hline
 EHC & hADD & 0.19 & 24 \\ \hline
 EHC & LANDMARK & 0.44 & 35 \\ \hline
 \end{tabular}
-\caption{Performance Comparison of GBFS and EHC with Various Heuristics (Exercise 1.3.2)}
-\label{tab:results_1_3_2}
+\caption{Performance Comparison of GBFS and EHC with Various Heuristics (Exercise 2.1)}
+\label{tab:results_2_1_4_2}
 \end{table}
-Based on the results from Exercise 1.3.1, the largest problem that Greedy Best-First Search (GBFS) could handle within the 1-minute time limit was size 7. This problem size was generated and tested for the algorithms GBFS and EHC with heuristics hMAX, hFF, hADD and Landmark. Both algorithms with heuristic hMAX exceeded the time limit, despite GBFS solving a size 7 problem with hMAX in under 9 seconds during the previous exercise. This occurred because the problem generator places elements randomly.
 
-EHC is more memory-efficient than GBFS, since it discards alternative paths once it makes a choice. It causes the algorithm to be fast and use minimal memory. However, it causes problems when the chosen path reaches dead-end, since it can't go back. The GBFS keeps all values in memory, so it can return if the path is unpromising, but at cost of taking much more memory. 
-
-The FF planer intelligently combines the strengths of both algorithms to maximize speed and reliability.
-The FF planner primarily relies on EHC paired with the hFF heuristic. However, if EHC gets trapped in a dead-end, the planner automatically changes to GBFS. The result of that is the planner can backtrack out of the dead-end, guaranteeing that a solution will eventually be found.
-
-
-\subsection{Third Part}
 
 \begin{table}[H]
 \centering
@@ -146,22 +195,10 @@ IDS & NONE & Timeout & $>$ 60s \\ \hline
 A* & hMAX & 6.60 & 16 \\ \hline
 A* & LMCUT & 17.91 & 16 \\ \hline
 \end{tabular}
-\caption{Performance of Optimal Planners and Admissible Heuristics (Exercise 1.3.3)}
-\label{tab:results_1_3_3}
+\caption{Performance of Optimal Planners and Admissible Heuristics (Exercise 2.1)}
+\label{tab:results_2_1_4_3}
 \end{table}
-An admissible heuristic is one that never overestimates the true cost to reach the goal, guaranteeing that an algorithm like A* will find an optimal solution. Among the heuristics implemented in Pyperplan, hMAX and LMCUT (Landmark-Cut) are admissible.
 
-The results show that almost every algorithm has the plan length equal to 16. The best-performing algorithm was BFS without any heuristics. The reason for that is the same cost for every action. Moreover, adding the heuristics to algorithm A* resulted in exceeding the time 3-6 times more. It is because  of the necesity to calculate these complex heuristics at every node.  
-
-Finally, IDS timed out because a plan length of 16 steps requires it to wipe its memory and completely regenerate the search tree from scratch 16 times, which causes to exceed the 1-minute limit.
-
-\section{Exercise 2.1: Problem Builder in Python}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{Figure_2} 
-    \caption{Size of the problem and the time required to find a solution in the tests}
-    \label{fig:figure2}
-\end{figure}
 \section{Exercise 2.2: Problem Builder in Python}
 \begin{figure}[H]
 Test run with lama-first alias

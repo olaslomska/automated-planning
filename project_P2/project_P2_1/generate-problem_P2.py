@@ -30,7 +30,7 @@ content_types = ["food", "medicine"]
 ########################################################################################
 
 # Set seed to 0 if you want more predictability...
-# random.seed(0);
+random.seed(0)
 
 ########################################################################################
 # Helper functions
@@ -304,6 +304,13 @@ def main():
         # TODO: Initialize all facts here!
         f.write("(:init\n")
 
+        f.write("\t(= (total-cost) 0)\n")
+
+        for i in range(len(location)):
+            for j in range(len(location)):
+                cost = flight_cost(location_coords, i, j)
+                f.write(f"\t(= (fly-cost {location[i]} {location[j]}) {cost})\n")
+
         for d in drone:
             f.write("\t(drone-at " + d + " depot)\n")
         for c in crate:
@@ -346,6 +353,9 @@ def main():
                     f.write("\t(has-content-person " + person_name + " " + content_name + ")\n")
 
         f.write("))\n")
+    
+        f.write("(:metric minimize (total-cost))\n")
+        
         f.write(")\n")
 
 if __name__ == '__main__':
