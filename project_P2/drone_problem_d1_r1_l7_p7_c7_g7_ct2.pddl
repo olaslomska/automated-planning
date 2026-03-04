@@ -1,0 +1,82 @@
+(define (problem drone_problem_d1_r1_l7_p7_c7_g7_ct2)
+(:domain p2)
+(:objects
+	drone1 - drone
+	depot - location
+	loc1 - location
+	loc2 - location
+	loc3 - location
+	loc4 - location
+	loc5 - location
+	loc6 - location
+	loc7 - location
+	crate1 - crate
+	crate2 - crate
+	crate3 - crate
+	crate4 - crate
+	crate5 - crate
+	crate6 - crate
+	crate7 - crate
+	food - content
+	medicine - content
+	person1 - person
+	person2 - person
+	person3 - person
+	person4 - person
+	person5 - person
+	person6 - person
+	person7 - person
+	carrier1 - carrier
+	space1 - carrier_space
+	space2 - carrier_space
+	space3 - carrier_space
+	space4 - carrier_space
+	N0 - num
+	N1 - num
+	N2 - num
+	N3 - num
+	N4 - num
+	N5 - num
+	N6 - num
+	N7 - num
+)
+(:init
+	(drone-at drone1 depot)
+	(crate-at crate1 depot)
+	(crate-at crate2 depot)
+	(crate-at crate3 depot)
+	(crate-at crate4 depot)
+	(crate-at crate5 depot)
+	(crate-at crate6 depot)
+	(crate-at crate7 depot)
+	(carrier-at carrier1 depot)
+	(empty-space carrier1 space1)
+	(empty-space carrier1 space2)
+	(empty-space carrier1 space3)
+	(empty-space carrier1 space4)
+	(content-crate food crate1)
+	(content-crate food crate2)
+	(content-crate medicine crate3)
+	(content-crate medicine crate4)
+	(content-crate medicine crate5)
+	(content-crate medicine crate6)
+	(content-crate medicine crate7)
+	(person-at person1 loc2)
+	(person-at person2 loc2)
+	(person-at person3 loc7)
+	(person-at person4 loc3)
+	(person-at person5 loc1)
+	(person-at person6 loc6)
+	(person-at person7 loc7)
+)
+(:goal (and
+	(drone-at drone1 depot)
+	(has-content-person person1 medicine)
+	(has-content-person person2 food)
+	(has-content-person person3 medicine)
+	(has-content-person person4 food)
+	(has-content-person person4 medicine)
+	(has-content-person person5 medicine)
+	(has-content-person person7 medicine)
+))
+)
