@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
-
+#seq-sat-fdss-2 lama-first seq-sat-fd-autotune-2
+alias = input()
 runtime = [0.0]
 num = [3]
 while(runtime[-1] < 60.0):
@@ -14,13 +15,13 @@ while(runtime[-1] < 60.0):
     start = time.perf_counter()
     try:
         #result = subprocess.run(["planutils", "run", "ff", "domain.pddl", f"cost/drone_problem_d1_r1_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"], capture_output=True, text=True)
-        result = subprocess.run(["planutils", "run", "downward","--", "--alias", "lama-first","domain.pddl", f"drone_problem_d1_r1_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"], capture_output=True, text=True)
+        result = subprocess.run(["planutils", "run", "downward","--", "--alias", f"{alias}","domain.pddl", f"drone_problem_d1_r1_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"], capture_output=True, text=True)
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")
     
     end = time.perf_counter()
-    file_name = f"output/output_size_{num[-1]}.txt"
+    file_name = f"output/{alias}/output_size_{num[-1]}.txt"
     with open(file_name, "w") as f:
         f.write(result.stdout)
 
@@ -39,5 +40,5 @@ plt.plot(num, runtime, marker='o')
 plt.xlabel('Size')
 plt.ylabel('Time[s]')
 #plt.savefig('report/Figure_1.png')
-plt.savefig('report/Figure_2_cost.png')
+plt.savefig(f'report/Figure_2_{alias}.png')
 plt.show()
