@@ -135,6 +135,26 @@ The FF planner primarily relies on EHC paired with the hFF heuristic. However, i
 
 \subsection{Third Part}
 
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Algorithm} & \textbf{Heuristic} & \textbf{Time (s)} & \textbf{Plan Length} \\ \hline
+A* & NONE & 2.57 & 16 \\ \hline
+BFS & NONE & 0.82 & 16 \\ \hline
+IDS & NONE & Timeout & $>$ 60s \\ \hline
+A* & hMAX & 6.60 & 16 \\ \hline
+A* & LMCUT & 17.91 & 16 \\ \hline
+\end{tabular}
+\caption{Performance of Optimal Planners and Admissible Heuristics (Exercise 1.3.3)}
+\label{tab:results_1_3_3}
+\end{table}
+An admissible heuristic is one that never overestimates the true cost to reach the goal, guaranteeing that an algorithm like A* will find an optimal solution. Among the heuristics implemented in Pyperplan, hMAX and LMCUT (Landmark-Cut) are admissible.
+
+The results show that almost every algorithm has the plan length equal to 16. The best-performing algorithm was BFS without any heuristics. The reason for that is the same cost for every action. Moreover, adding the heuristics to algorithm A* resulted in exceeding the time 3-6 times more. It is because  of the necesity to calculate these complex heuristics at every node.  
+
+Finally, IDS timed out because a plan length of 16 steps requires it to wipe its memory and completely regenerate the search tree from scratch 16 times, which causes to exceed the 1-minute limit.
+
 
 
 \end{document}

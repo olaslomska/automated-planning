@@ -3,21 +3,16 @@ import time
 import re
 
 test_configs = [
-    ("gbf", None),       # Greedy Best First Search without heuristic
-    ("gbf", "hmax"),       # Greedy Best First Search with hMAX
-    ("gbf", "hff"),   # Greedy Best First Search with hFF
-    ("gbf", "hadd"),     # Greedy Best First Search with hADD
-    ("gbf", "landmark"), # Greedy Best First Search with landmark
-    ("ehs", None),       # EHC without heuristic
-    ("ehs", "hmax"),   # EHC with hMAX
-    ("ehs", "hff"),    # EHC with hFF
-    ("ehs", "hadd"),    # EHC with hADD
-    ("ehs", "landmark") # EHC with landmark
+    ("astar", None),   # A* z hMAX
+    ("bfs", None),     # Breadth First Search
+    ("ids", None),     # Iterative Deepening Search
+    ("astar", "hmax"),   # A* z hMAX
+    ("astar", "lmcut"),   # A* z lmcut
 ]
 
 domain_file = "domain.pddl"
 
-num = 7 
+num = 5 
 problem_file = f"drone_problem_d1_r0_l{num}_p{num}_c{num}_g{num}_ct2.pddl"
 subprocess.run(["python3", "./generate-problem.py", "-d", "1", "-r", "0" ,"-l" ,str(num) ,"-p", str(num) ,"-c" ,str(num) ,"-g", str(num)], capture_output=True)
 print(f"{'Algorithm':<10} | {'Heuristic':<10} | {'Time (s)':<10} | {'Plan Length'}")

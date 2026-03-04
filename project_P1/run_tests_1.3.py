@@ -32,7 +32,7 @@ for search_alg, heuristic in test_configs:
 
         try:
             start_time = time.time()
-            result = subprocess.run(command, capture_output=True, text=True, timeout=80.0)
+            result = subprocess.run(command, capture_output=True, text=True, timeout=60.0)
             elapsed_time = time.time() - start_time
 
             output = (result.stdout + result.stderr).lower()
