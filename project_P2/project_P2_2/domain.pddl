@@ -1,5 +1,5 @@
 (define (domain p2)
-(:requirements :strips :typing :action-costs)
+(:requirements :strips :typing :action-costs :numeric-fluents)
 
 (:types 
     location 
@@ -24,6 +24,11 @@
     (carrier-capacity ?carrier - carrier ?n - num)
 )
 
+(:functions
+    (total-cost)
+    (fly-cost ?location_from - location ?location_to - location)    
+)
+
 (:action put-crate-in-carrier
     :parameters (
         ?crate - crate
@@ -44,7 +49,8 @@
         (not (crates-in-carrier ?carrier ?n_current))
         (crates-in-carrier ?carrier ?n_next)
         (in-carrier ?crate ?carrier)        
-        (not (crate-at ?crate ?location))    
+        (not (crate-at ?crate ?location))  
+        (increase (total-cost) 1)  
     )
 )
 
@@ -64,6 +70,7 @@
         (drone-at ?drone ?location_to)
         (not (carrier-at ?carrier ?location_from))
         (carrier-at ?carrier ?location_to)     
+        (increase (total-cost) (fly-cost ?location_from ?location_to))  
     )
 )
 
@@ -92,6 +99,7 @@
         (crates-in-carrier ?carrier ?n_prev)
         (not (in-carrier ?crate ?carrier))        
         (has-content-person ?person ?content)   
+        (increase (total-cost) 1)  
     )
 )
 )
