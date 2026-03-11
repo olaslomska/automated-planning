@@ -1,6 +1,5 @@
 (define (domain p2)
-(:requirements :strips :typing :action-costs :numeric-fluents)
-
+(:requirements :strips :typing :action-costs)
 (:types 
     location 
     crate 

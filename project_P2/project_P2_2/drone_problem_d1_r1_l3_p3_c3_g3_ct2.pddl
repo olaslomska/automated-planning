@@ -15,57 +15,51 @@
 	person2 - person
 	person3 - person
 	carrier1 - carrier
-	space1 - carrier_space
-	space2 - carrier_space
-	space3 - carrier_space
-	space4 - carrier_space
 	N0 - num
 	N1 - num
 	N2 - num
 	N3 - num
 	N4 - num
-	N5 - num
-	N6 - num
-	N7 - num
 )
 (:init
+	(= (total-cost) 0)
+	(= (fly-cost depot depot) 1)
+	(= (fly-cost depot loc1) 223)
+	(= (fly-cost depot loc2) 68)
+	(= (fly-cost depot loc3) 182)
+	(= (fly-cost loc1 depot) 223)
+	(= (fly-cost loc1 loc1) 1)
+	(= (fly-cost loc1 loc2) 189)
+	(= (fly-cost loc1 loc3) 67)
+	(= (fly-cost loc2 depot) 68)
+	(= (fly-cost loc2 loc1) 189)
+	(= (fly-cost loc2 loc2) 1)
+	(= (fly-cost loc2 loc3) 134)
+	(= (fly-cost loc3 depot) 182)
+	(= (fly-cost loc3 loc1) 67)
+	(= (fly-cost loc3 loc2) 134)
+	(= (fly-cost loc3 loc3) 1)
 	(drone-at drone1 depot)
 	(crate-at crate1 depot)
 	(crate-at crate2 depot)
 	(crate-at crate3 depot)
 	(carrier-at carrier1 depot)
-	(empty-space carrier1 space1)
-	(empty-space carrier1 space2)
-	(empty-space carrier1 space3)
-	(empty-space carrier1 space4)
+	(crates-in-carrier carrier1 N0)
 	(content-crate food crate1)
 	(content-crate food crate2)
 	(content-crate medicine crate3)
-	(person-at person1 loc3)
-	(person-at person2 loc2)
+	(person-at person1 loc1)
+	(person-at person2 loc3)
 	(person-at person3 loc2)
-(= (total-cost) 0)
-	(= (fly-cost depot depot) 1)
-	(= (fly-cost depot loc1) 66)
-	(= (fly-cost depot loc2) 181)
-	(= (fly-cost depot loc3) 233)
-	(= (fly-cost loc1 depot) 66)
-	(= (fly-cost loc1 loc1) 1)
-	(= (fly-cost loc1 loc2) 116)
-	(= (fly-cost loc1 loc3) 173)
-	(= (fly-cost loc2 depot) 181)
-	(= (fly-cost loc2 loc1) 116)
-	(= (fly-cost loc2 loc2) 1)
-	(= (fly-cost loc2 loc3) 98)
-	(= (fly-cost loc3 depot) 233)
-	(= (fly-cost loc3 loc1) 173)
-	(= (fly-cost loc3 loc2) 98)
-	(= (fly-cost loc3 loc3) 1)
+	(next-num N0 N1)
+	(next-num N1 N2)
+	(next-num N2 N3)
+	(next-num N3 N4)
 )
 (:goal (and
 	(drone-at drone1 depot)
-	(has-content-person person1 food)
-	(has-content-person person1 medicine)
+	(has-content-person person2 food)
+	(has-content-person person2 medicine)
 	(has-content-person person3 food)
 ))
 (:metric minimize (total-cost))

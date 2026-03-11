@@ -218,7 +218,7 @@ def main():
     crate = []
     location = []
     carrier = []
-    num = ["N0", "N1", "N2", "N3", "N4", "N5", "N6", "N7"]
+    num = ["N0", "N1", "N2", "N3", "N4"] #to ensure max number of spaces without more logic
 
     location.append("depot")
     for x in range(options.locations):
@@ -311,7 +311,6 @@ def main():
             f.write("\t(crate-at " + c + " depot)\n")
         for c in carrier:
              f.write("\t(carrier-at " + c + " depot)\n")
-             f.write("\t(carrier-capacity " + c + " N4)\n")
              f.write("\t(crates-in-carrier " + c + " N0)\n")
 
         for x in range(len(content_types)):
