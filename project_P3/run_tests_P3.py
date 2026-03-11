@@ -25,7 +25,7 @@ for mode in modes:
                 print(f"Command failed with return code {e.returncode}")
             start = time.perf_counter()
             try:
-                result = subprocess.run(["planutils", "run", "lpg-td","--", "-o", "domain.pddl", "-f", f"drone_problem_d{d}_r{d}_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl", f"-{mode}"], capture_output=True, text=True)
+                result = subprocess.run(["planutils", "run", "lpg-td","--", "domain.pddl", f"drone_problem_d{d}_r{d}_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl", f"-{mode}"], capture_output=True, text=True)
                 print(result.stdout)
             except subprocess.CalledProcessError as e:
                 print(f"Command failed with return code {e.returncode}")
