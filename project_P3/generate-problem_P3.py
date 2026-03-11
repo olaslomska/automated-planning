@@ -307,10 +307,13 @@ def main():
 
         for d in drone:
             f.write("\t(drone-at " + d + " depot)\n")
+            f.write("\t(drone-free " + d + ")\n")
         for c in crate:
             f.write("\t(crate-at " + c + " depot)\n")
+            f.write("\t(crate-free " + c + ")\n")
         for c in carrier:
              f.write("\t(carrier-at " + c + " depot)\n")
+             f.write("\t(carrier-free " + c + ")\n")
              f.write("\t(carrier-capacity " + c + " N4)\n")
              f.write("\t(crates-in-carrier " + c + " N0)\n")
 
@@ -323,6 +326,7 @@ def main():
         for p in person:
             loc = random.choice(people_locations)
             f.write("\t(person-at " + p + " " + loc + ")\n")
+            f.write("\t(person-free " + p + ")\n")
 
         for i in range(len(num) - 1):
             f.write("\t(next-num " + num[i] + " " + num[i+1] + ")\n")
@@ -350,7 +354,7 @@ def main():
 
         f.write("))\n")
     
-        f.write("(:metric minimize (total-cost))\n")
+        f.write("(:metric minimize (total-time))\n")
         
         f.write(")\n")
 
