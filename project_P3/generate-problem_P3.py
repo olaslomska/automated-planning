@@ -218,7 +218,7 @@ def main():
     crate = []
     location = []
     carrier = []
-    num = ["N0", "N1", "N2", "N3", "N4", "N5", "N6", "N7"]
+    num = ["N0", "N1", "N2", "N3", "N4"]
 
     location.append("depot")
     for x in range(options.locations):
