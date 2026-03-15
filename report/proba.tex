@@ -222,7 +222,8 @@ The results show that almost every algorithm has a plan length equal to 17. The 
 Finally, IDS timed out because a plan length of 17 steps requires it to wipe its memory and completely regenerate the search tree from scratch 17 times, which causes it to exceed the 1-minute limit.
 
 \section{Exercise 2.1: Problem Builder in Python}
-
+In this exercise new actions have been added.
+PUT-CRATE-IN-CARRIER 
 
 \begin{lstlisting}
 (define (problem drone_problem_d1_r1_l2_p2_c2_g2_ct2)
@@ -244,16 +245,22 @@ Finally, IDS timed out because a plan length of 17 steps requires it to wipe its
 	N2 - num
 	N3 - num
 	N4 - num
-	N5 - num
-	N6 - num
-	N7 - num
 )
 (:init
+	(= (total-cost) 0)
+	(= (fly-cost depot depot) 1)
+	(= (fly-cost depot loc1) 223)
+	(= (fly-cost depot loc2) 68)
+	(= (fly-cost loc1 depot) 223)
+	(= (fly-cost loc1 loc1) 1)
+	(= (fly-cost loc1 loc2) 189)
+	(= (fly-cost loc2 depot) 68)
+	(= (fly-cost loc2 loc1) 189)
+	(= (fly-cost loc2 loc2) 1)
 	(drone-at drone1 depot)
 	(crate-at crate1 depot)
 	(crate-at crate2 depot)
 	(carrier-at carrier1 depot)
-	(carrier-capacity carrier1 N4)
 	(crates-in-carrier carrier1 N0)
 	(content-crate food crate1)
 	(content-crate medicine crate2)
@@ -263,16 +270,15 @@ Finally, IDS timed out because a plan length of 17 steps requires it to wipe its
 	(next-num N1 N2)
 	(next-num N2 N3)
 	(next-num N3 N4)
-	(next-num N4 N5)
-	(next-num N5 N6)
-	(next-num N6 N7)
 )
 (:goal (and
 	(drone-at drone1 depot)
 	(has-content-person person2 food)
 	(has-content-person person2 medicine)
 ))
+(:metric minimize (total-cost))
 )
+
 
 \end{lstlisting}
 
@@ -334,28 +340,6 @@ By adding the carriers the plan length was improved. The reason for that is the 
 
 \section{Exercise 2.2: Problem Builder in Python}
 \subsection{First Part - satisficing planners}
-\begin{figure}[H]
-Test run with lama-first alias
-    \centering
-    \includegraphics[width=0.9\textwidth]{Figure_2_cost} 
-    \caption{Size of the problem and the time required to find a solution in the tests}
-    \label{fig:figure3}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{Figure_2_seq-sat-fdss-2} 
-    \caption{Size of the problem and the time required to find a solution in the tests with seq-sat-fdss-2 alias}
-    \label{fig:figure3}
-\end{figure}
-
-\begin{figure}[H]
-Test run with lama-first alias
-    \centering
-    \includegraphics[width=0.9\textwidth]{Figure_2_cost} 
-    \caption{Size of the problem and the time required to find a solution in the tests}
-    \label{fig:figure3}
-\end{figure}
 
 \begin{table}[H]
 \centering
@@ -363,14 +347,13 @@ Test run with lama-first alias
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 \textbf{Planner} & \textbf{Alias} & \textbf{Max problem size} & \textbf{Max size cost} & \textbf{Cost(size 3)}\\ \hline
-Metric-ff & NONE & 10 (time 0.1s) & 2144 & 834\\ \hline
+Metric-ff & NONE & 10 (time 0.1s) & 2476 & 834\\ \hline
 Fast Downward & lama-first & 120 & 32840 & 834\\ \hline
-Fast Downward & seq-sat-fdss-2 & 400 & ?? & 0 \\ \hline
 Fast Downward & seq-sat-fd-autotune-2 & 6 & 834 & 518\\ \hline
 \end{tabular}%
 }
 \end{table}
-Lama-first and seq-sat-fdss-2 biggest problem sizes are esitmates, sizes were being incremented by 10. Metric-ff gets overflown when size of the problem exceeds 10.
+Metrif-ff has been measured only up to problem size 11. Bigger problems did not execute, most probably because of Metric-ff problem size limitations.
 
 \subsection{Second Part - optimal planners}
 
@@ -380,8 +363,7 @@ Lama-first and seq-sat-fdss-2 biggest problem sizes are esitmates, sizes were be
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 \textbf{Planner} & \textbf{Alias} & \textbf{Max problem size} & \textbf{Max size cost} & \textbf{Cost(size 3)}\\ \hline
-Fast Downward & seq-opt-lmcut & 1023 & 32840 & 518\\ \hline
-Fast Downward & seq-opt-fdss-2 & 400 & ?? & 0 \\ \hline
+Fast Downward & seq-opt-lmcut & 6 & 1023 & 518\\ \hline
 Fast Downward & seq-opt-bjolp & 6 & 1023 & 518 \\ \hline
 \end{tabular}%
 }

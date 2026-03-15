@@ -4,8 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 import os 
-#seq-sat-fdss-2 lama-first seq-sat-fd-autotune-2
-#  seq-opt-fdss-2 seq-opt-bjolp seq-opt-lmcut
+# lama-first seq-sat-fd-autotune-2
+#  seq-opt-bjolp seq-opt-lmcut
 alias = input()
 runtime = [0.0]
 num = [2]
@@ -28,7 +28,7 @@ while(runtime[-1] < 60.0):
     with open(file_name, "w") as f:
         f.write(result.stdout)
 
-    new_num = num[-1] + 5
+    new_num = num[-1] + 1
     new_runtime = end - start
     if new_runtime < 60.0:
         num.append(new_num)

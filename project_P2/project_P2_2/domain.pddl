@@ -20,7 +20,6 @@
     (next-num ?numA - num ?numB - num) 
     (in-carrier ?crate - crate ?carrier - carrier)
     (crates-in-carrier ?carrier - carrier ?n - num)
-    (carrier-capacity ?carrier - carrier ?n - num)
 )
 
 (:functions
