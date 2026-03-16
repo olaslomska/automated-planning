@@ -346,14 +346,67 @@ By adding the carriers the plan length was improved. The reason for that is the 
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{Planner} & \textbf{Alias} & \textbf{Max problem size} & \textbf{Max size cost} & \textbf{Cost(size 3)}\\ \hline
-Metric-ff & NONE & 10 (time 0.1s) & 2476 & 834\\ \hline
-Fast Downward & lama-first & 120 & 32840 & 834\\ \hline
-Fast Downward & seq-sat-fd-autotune-2 & 6 & 834 & 518\\ \hline
+\textbf{Planner} & \textbf{Alias} & \textbf{Max problem size} & \textbf{Cost(biggest problem)} & \textbf{Cost(size 5)}\\ \hline
+Metric-ff & NONE & 10 (time 0.1s) & 2476 & 1472\\ \hline
+Fast Downward & lama-first & 125 & 34490 & 1472\\ \hline
+Fast Downward & seq-sat-fd-autotune-2 & 7 & 637 & 723\\ \hline
+Fast Downward & seq-sat-fdss-2 & 12 & 1818 & 723 \\ \hline
 \end{tabular}%
 }
+Metrif-ff has been measured only up to problem size 11. Bigger problems did not execute, most probably because of Metric-ff problem size limitations. 
+Unlike optimal planners, satisficing planners do not guarantee the lowest possible cost. They use Greedy Best-First Search to find a "good enough" valid plan before the time limit expires. By trading mathematical perfection for raw speed, these planners can scale to much larger and more complex real-world problems.
 \end{table}
-Metrif-ff has been measured only up to problem size 11. Bigger problems did not execute, most probably because of Metric-ff problem size limitations.
+
+\begin{itemize}
+  \item \textbf{Metric-FF (NONE)} - Uses Enforced Hill-Climbing (EHC) and the Fast-Forward heuristic. It guesses the distance to the goal using "delete relaxation" (pretending actions never consume resources or undo progress). It prioritizes raw speed over route quality, evaluating merely 58 states in a fraction of a second. This blind sprinting results in highly unoptimized routing: for example, instead of maximizing carrier capacity, it makes multiple redundant round-trips to the exact same location, resulting in a cost of 1472 for size 5 (double the optimal cost).
+  \begin{lstlisting}
+ff: search configuration is Enforced Hill-Climbing, then A*epsilon with weight 5.
+...
+Cueing down from goal distance:    11 into depth [1]
+...
+        8: PICK-AND-DROP CRATE3 LOC1 DRONE1 CARRIER1 PERSON3 FOOD N1 N0
+        9: MOVE-CARRIER LOC1 DEPOT DRONE1 CARRIER1
+...
+plan cost: 1472.000000
+time spent: ... 0.00 seconds searching, evaluating 58 states, to a max depth of 4
+  \end{lstlisting}
+
+  \item \textbf{lama-first} - Uses landmarks to aggressively tunnel toward the goal. To maximize speed, it temporarily sets all action costs to 1, completely ignoring expensive flight distances. It stops immediately after finding its very first valid plan. This lack of optimization allows it to scale to colossal sizes (solving a 125-location problem by generating over 3 million states), but results in highly inefficient, repetitive routing (a massive cost of 34,490 for 480 steps).
+  \begin{lstlisting}
+[t=5.824840s] Discovered 394 landmarks...
+...
+[t=44.423614s] Solution found!
+[t=44.423742s] Plan length: 480 step(s).
+[t=44.423742s] Plan cost: 34490
+[t=44.423742s] Generated 3124908 state(s).
+  \end{lstlisting}
+
+  \item \textbf{seq-sat-fd-autotune-2} - A machine-tuned "anytime" portfolio. It evaluates the problem using multiple heuristics simultaneously (CEA, CG, Goalcount, and FF). It finds a quick, sloppy plan, then uses the remaining time to iteratively tighten the acceptable cost boundary and search again. This loops until time runs out, beautifully optimizing the cost but limiting its maximum scale due to the heavy computational overhead.
+  \begin{lstlisting}
+[t=0.016748s] Solution found!
+[t=0.017024s] Plan cost: 1860
+...
+[t=0.036964s] Solution found!
+[t=0.037225s] Plan cost: 1558
+...
+[t=9.347671s] Solution found!
+[t=9.347953s] Plan cost: 637
+[t=43.583179s] Completely explored state space -- no solution!
+  \end{lstlisting}
+
+  \item \textbf{seq-sat-fdss-2} - A human-designed anytime portfolio that splits the time limit across different search algorithms. It typically secures a fast baseline plan first, then switches to Weighted A* search to meticulously squeeze the cost down. It perfectly balances the massive scale of greedy planners with the cost-optimization of anytime search, making it highly robust.
+  \begin{lstlisting}
+[t=0.046154s] Solution found!
+[t=0.046154s] Plan cost: 3064
+...
+[t=0.003971s] Conducting best first search ... (real) bound = 3064
+[t=0.023751s] Solution found!
+[t=0.023751s] Plan cost: 2286
+...
+[t=2.762474s] Solution found!
+[t=2.762474s] Plan cost: 1818
+  \end{lstlisting}
+\end{itemize}
 
 \subsection{Second Part - optimal planners}
 
@@ -362,12 +415,44 @@ Metrif-ff has been measured only up to problem size 11. Bigger problems did not 
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{Planner} & \textbf{Alias} & \textbf{Max problem size} & \textbf{Max size cost} & \textbf{Cost(size 3)}\\ \hline
-Fast Downward & seq-opt-lmcut & 6 & 1023 & 518\\ \hline
-Fast Downward & seq-opt-bjolp & 6 & 1023 & 518 \\ \hline
+\textbf{Planner} & \textbf{Alias} & \textbf{Max problem size} & \textbf{Cost(biggest problem)} & \textbf{Cost(size 5)}\\ \hline
+Fast Downward & seq-opt-lmcut & 7 & 637 & 723\\ \hline
+Fast Downward & seq-opt-bjolp & 8 & 783 & 723 \\ \hline
+Fast Downward & seq-opt-fdss-2 & 11 & 927 & 723 \\ \hline
 \end{tabular}%
 }
+All of the optimal planners returned the same optimal cost for the same problem. They all used A* search, which means plans can not finish executing untill they find an optimal solution. 
 \end{table}
+
+\begin{itemize}
+  \item seq-opt-lmcut - builds graphs and makes mathematical cuts to find the best solution. Cuts are costly in time, so planner managed to find solution to the smallest size of a problem out of all optimal planners. Cost for size 7 is smaller than cost for size 5 due to random values of cost of actions and random goals by the algorithm to each problem.
+   \begin{lstlisting}
+[t=0.005246s] Initial heuristic value for lmcut: 235
+...
+[t=0.326000s] New best heuristic value for lmcut: 131
+[t=0.326045s] New best heuristic value for lmcut: 0
+[t=0.326094s] Solution found!
+  \end{lstlisting}
+
+  \item seq-opt-bjopl - scans the problem to discover the landmarks (actions that must happen). Finding the landmarks takes most of the time of the search, then evaluating teh steps during search is faster.
+ \begin{lstlisting}
+[t=0.005181s] Merging 2 landmark graphs
+[t=0.006838s] Discovered 23 landmarks...
+[t=0.007555s] Initial heuristic value for landmark_cost_partitioning: 190
+...
+[t=0.075162s] New best heuristic value for landmark_cost_partitioning: 0
+[t=0.099509s] Solution found!
+[t=0.099524s] Actual search time: 0.091956s
+  \end{lstlisting}
+  \item seq-opt-fdss-2 - uses precalculated table to search for the solution - merge and shrink algorithm, which is faster than complex math done by other planners.
+  \begin{lstlisting}
+[t=0.007845s] Running merge-and-shrink algorithm...
+[t=0.117385s] Done initializing merge-and-shrink heuristic.
+...
+[t=0.326045s] New best heuristic value for merge_and_shrink: 0
+[t=0.326118s] Actual search time: 0.320856s
+  \end{lstlisting}
+\end{itemize}
 
 \section{Exercise 3: Concurrent actions in emergency management}
 
