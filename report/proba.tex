@@ -453,7 +453,7 @@ All of the optimal planners returned the same optimal cost for the same problem.
 [t=0.326118s] Actual search time: 0.320856s
   \end{lstlisting}
 \end{itemize}
-
+\clearpage
 \section{Exercise 3: Concurrent actions in emergency management}
 
 \begin{table}[H]
@@ -461,32 +461,52 @@ All of the optimal planners returned the same optimal cost for the same problem.
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
-\textbf{Drones} & 
-\textbf{Max problem size} & 
-\textbf{Mode} & 
-\textbf{Processing Time [s]} & 
-\textbf{Number of steps} &
-\textbf{Total Duration} \\ \hline
-
-1 & 5 & Quality & 4.76 & 23 & 2042.00 \\ \cline{3-6}
-  &   & Speed   & 0.14 & 23 & 1850.00 \\ \hline
-
-2 & 3 & Quality & 2.76 & 13 & 638.00 \\ \cline{3-6}
-  &   & Speed   & 0.28 & 12 & 530.00 \\ \hline
-
-3 & 3 & Quality & 84.26 & 13 & 414.00 \\ \cline{3-6}
-  &   & Speed   & 1.25 & 13 & 778.00 \\ \hline
-
-4 & 3 & Quality & 19.02 & 16 & 510.00 \\ \cline{3-6}
-  &   & Speed   & 2.66 & 17 & 1142.00 \\ \hline
-
-5 & 3 & Quality & 315.97 & 12 & 379.00 \\ \cline{3-6}
-  &   & Speed   & 14.39 & 14 & 409.00 \\ \hline
-
+\textbf{Drones \& Carriers} & \textbf{Problem Size} & \textbf{Duration (1st plan)} & \textbf{Steps (1st plan)} & \textbf{Duration (last plan)} & \textbf{Steps (last plan)} \\ \hline
+1 & 3 & 550.01 & 11 & 414.01 & 9 \\ \hline
+1 & 4 & 978.01 & 14 & 648.01 & 13 \\ \hline
+1 & 5 & 1844.02 & 21 & 1512.02 & 18 \\ \hline
+1 & 6 & 1593.02 & 23 & 1190.02 & 20 \\ \hline
+1 & 7 & 1264.02 & 24 & 1264.02 & 24 \\ \hline
+1 & 8 & 2430.03 & 35 & 1980.03 & 30 \\ \hline
+1 & 9 & 2579.04 & 37 & 2190.03 & 32 \\ \hline
+1 & 10 & 2723.04 & 37 & 2434.03 & 34 \\ \hline
+2 & 3 & 748.01 & 13 & 384.01 & 10 \\ \hline
+2 & 4 & 602.01 & 15 & 520.01 & 14 \\ \hline
+2 & 5 & 922.01 & 18 & 917.01 & 18 \\ \hline
+2 & 6 & 708.01 & 22 & 655.01 & 20 \\ \hline
+2 & 7 & 614.01 & 22 & 614.01 & 22 \\ \hline
+2 & 8 & 1084.02 & 30 & 1014.01 & 30 \\ \hline
+2 & 9 & 1194.02 & 32 & 1137.02 & 33 \\ \hline
+2 & 10 & 1288.02 & 36 & 1288.02 & 36 \\ \hline
+2 & 11 & 1064.02 & 39 & 1064.02 & 39 \\ \hline
+2 & 12 & 1575.02 & 42 & 1575.02 & 42 \\ \hline
+2 & 13 & 1433.03 & 46 & 1433.03 & 46 \\ \hline
+2 & 14 & 1458.02 & 48 & 1458.02 & 48 \\ \hline
+2 & 15 & 2727.03 & 59 & 2727.03 & 59 \\ \hline
+2 & 16 & 2848.03 & 63 & 2848.03 & 63 \\ \hline
+2 & 17 & 2322.03 & 64 & 2322.03 & 64 \\ \hline
+2 & 18 & 2209.03 & 69 & 2209.03 & 69 \\ \hline
+3 & 3 & 379.00 & 12 & 379.00 & 12 \\ \hline
+3 & 4 & 602.01 & 16 & 466.01 & 17 \\ \hline
+3 & 5 & 912.01 & 23 & 774.01 & 20 \\ \hline
+3 & 6 & 478.01 & 21 & 478.01 & 21 \\ \hline
+4 & 3 & 379.00 & 14 & 379.00 & 14 \\ \hline
+4 & 4 & 456.00 & 16 & 456.00 & 16 \\ \hline
+5 & 3 & 379.00 & 16 & 379.00 & 16 \\ \hline
+5 & 4 & 456.00 & 18 & 456.00 & 18 \\ \hline
+5 & 5 & 461.00 & 20 & 461.00 & 20 \\ \hline
 \end{tabular}%
 }
-\caption{Comparison of LPG-TD planner performance in Quality and Speed modes.}
-\label{tab:lpg-td_comparison}
+\caption{Comparison of the first and last solution found by the Optic planner in anytime mode within a 1-minute limit.}
+\label{tab:optic_comparison}
 \end{table}
+
+\subsection{Analysis of Concurrent Planning with Optic}
+
+Unlike standard satisficing planners that terminate after finding the first valid plan, Optic utilizes the remaining time to continuously search for better solutions. As shown in Table \ref{tab:optic_comparison}, the duration of the last found plan is significantly shorter than the first one. For instance, for 1 drone and size 4, the planner reduced the plan duration from 978.01 to 648.01 while also minimizing the number of actions. 
+    
+The introduction of durative actions allows drones to operate in parallel. When comparing a problem of size 4 across different configurations, the optimized plan duration drops as more resources are added. This proves that the planner successfully scheduled non-conflicting actions concurrently, resulting in highly time-efficient logistics.
+    
+While adding more drones and carriers decreases the actual duration of the plan, it creates a massive number of parallel possibilities for the planner to evaluate at every step. This explosion of choices quickly consumes the available processing time. As a result, while the 2-drone configuration managed to solve a problem up to size 18, the maximum solvable size dropped considerably for 3, 4, and 5 drones before hitting the 1-minute limit.
 
 \end{document}

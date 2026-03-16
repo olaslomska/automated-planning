@@ -1,4 +1,4 @@
-(define (domain p2)
+(define (domain p3)
 (:requirements :strips :typing :durative-actions :numeric-fluents)
 
 (:types 
@@ -29,7 +29,6 @@
 )
 
 (:functions
-    (total-cost)
     (fly-cost ?location_from - location ?location_to - location) - number
 )
 

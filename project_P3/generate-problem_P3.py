@@ -259,7 +259,7 @@ def main():
         # Write the initial part of the problem
 
         f.write("(define (problem " + problem_name + ")\n")
-        f.write("(:domain p2)\n")
+        f.write("(:domain p3)\n")
         f.write("(:objects\n")
 
         ######################################################################
@@ -297,8 +297,6 @@ def main():
 
         # TODO: Initialize all facts here!
         f.write("(:init\n")
-
-        f.write("\t(= (total-cost) 0)\n")
 
         for i in range(len(location)):
             for j in range(len(location)):
@@ -354,7 +352,7 @@ def main():
 
         f.write("))\n")
     
-        f.write("(:metric minimize (total-time))\n")
+        #f.write("(:metric minimize (total-time))\n")
         
         f.write(")\n")
 

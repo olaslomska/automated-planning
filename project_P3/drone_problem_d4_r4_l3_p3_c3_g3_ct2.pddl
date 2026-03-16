@@ -1,5 +1,5 @@
 (define (problem drone_problem_d4_r4_l3_p3_c3_g3_ct2)
-(:domain p2)
+(:domain p3)
 (:objects
 	drone1 - drone
 	drone2 - drone
@@ -26,12 +26,8 @@
 	N2 - num
 	N3 - num
 	N4 - num
-	N5 - num
-	N6 - num
-	N7 - num
 )
 (:init
-	(= (total-cost) 0)
 	(= (fly-cost depot depot) 1)
 	(= (fly-cost depot loc1) 223)
 	(= (fly-cost depot loc2) 68)
@@ -91,9 +87,6 @@
 	(next-num N1 N2)
 	(next-num N2 N3)
 	(next-num N3 N4)
-	(next-num N4 N5)
-	(next-num N5 N6)
-	(next-num N6 N7)
 )
 (:goal (and
 	(drone-at drone1 depot)
@@ -104,5 +97,4 @@
 	(has-content-person person2 medicine)
 	(has-content-person person3 food)
 ))
-(:metric minimize (total-time))
 )
