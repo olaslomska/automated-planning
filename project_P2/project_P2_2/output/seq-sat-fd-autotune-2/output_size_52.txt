@@ -1,0 +1,128 @@
+INFO     planner time limit: 60s
+INFO     planner memory limit: None
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: 59s
+INFO     translator memory limit: None
+INFO     translator command line string: /usr/bin/python3 /workspace/downward/builds/release/bin/translate/translate.py domain.pddl drone_problem_d1_r1_l52_p52_c52_g52_ct2.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.030s CPU, 0.028s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.004s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.004s wall-clock]
+Preparing model... [0.010s CPU, 0.004s wall-clock]
+Generated 37 rules.
+Computing model... [0.120s CPU, 0.122s wall-clock]
+17569 relevant atoms
+23021 auxiliary atoms
+40590 final queue length
+67992 total queue pushes
+Completing instantiation... [0.310s CPU, 0.313s wall-clock]
+Instantiating: [0.450s CPU, 0.454s wall-clock]
+Computing fact groups...
+Finding invariants...
+18 initial candidates
+Finding invariants: [0.010s CPU, 0.008s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.001s wall-clock]
+Instantiating groups... [0.010s CPU, 0.010s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+104 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.020s CPU, 0.019s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Processing axioms: [0.020s CPU, 0.013s wall-clock]
+Translating task: [0.340s CPU, 0.338s wall-clock]
+0 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+3 propositions removed
+Detecting unreachable propositions: [0.190s CPU, 0.191s wall-clock]
+Reordering and filtering variables...
+107 of 159 variables necessary.
+0 of 55 mutex groups necessary.
+13780 of 13780 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.050s CPU, 0.047s wall-clock]
+Translator variables: 107
+Translator derived variables: 0
+Translator facts: 371
+Translator goal facts: 53
+Translator mutex groups: 0
+Translator total mutex groups size: 0
+Translator operators: 13780
+Translator axioms: 0
+Translator task size: 96895
+Translator peak memory: 93576 KB
+Writing output... [0.070s CPU, 0.065s wall-clock]
+Done! [1.160s CPU, 1.159s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: 58s
+INFO     search memory limit: None
+INFO     search command line string: /workspace/downward/builds/release/bin/downward --search 'let(hcea,cea(transform=adapt_costs(plusone)),let(hcg,cg(transform=adapt_costs(one)),let(hgc,goalcount(transform=adapt_costs(plusone)),let(hff,ff(),iterated([ehc(hcea,preferred=[hcea],preferred_usage=prune_by_preferred,cost_type=normal),lazy(alt([single(sum([weight(g(),2),weight(hff,3)])),single(sum([weight(g(),2),weight(hff,3)]),pref_only=true),single(sum([weight(g(),2),weight(hcg,3)])),single(sum([weight(g(),2),weight(hcg,3)]),pref_only=true),single(sum([weight(g(),2),weight(hcea,3)])),single(sum([weight(g(),2),weight(hcea,3)]),pref_only=true),single(sum([weight(g(),2),weight(hgc,3)])),single(sum([weight(g(),2),weight(hgc,3)]),pref_only=true)],boost=200),preferred=[hcea,hgc],reopen_closed=false,cost_type=one),lazy(alt([single(sum([g(),weight(hff,5)])),single(sum([g(),weight(hff,5)]),pref_only=true),single(sum([g(),weight(hcg,5)])),single(sum([g(),weight(hcg,5)]),pref_only=true),single(sum([g(),weight(hcea,5)])),single(sum([g(),weight(hcea,5)]),pref_only=true),single(sum([g(),weight(hgc,5)])),single(sum([g(),weight(hgc,5)]),pref_only=true)],boost=5000),preferred=[hcea,hgc],reopen_closed=true,cost_type=normal),lazy(alt([single(sum([g(),weight(hff,2)])),single(sum([g(),weight(hff,2)]),pref_only=true),single(sum([g(),weight(hcg,2)])),single(sum([g(),weight(hcg,2)]),pref_only=true),single(sum([g(),weight(hcea,2)])),single(sum([g(),weight(hcea,2)]),pref_only=true),single(sum([g(),weight(hgc,2)])),single(sum([g(),weight(hgc,2)]),pref_only=true)],boost=1000),preferred=[hcea,hgc],reopen_closed=true,cost_type=one)],repeat_last=true,continue_on_fail=true)))))' --internal-plan-file sas_plan < output.sas
+[t=0.001562s, 12120 KB] reading input...
+[t=0.046669s, 16976 KB] done reading input!
+[t=0.049730s, 17640 KB] Initializing context-enhanced additive heuristic...
+[t=0.077685s, 21756 KB] Initializing causal graph heuristic...
+[t=0.077685s, 21756 KB] Initializing heuristic cache... building causal graph...done! [t=0.004000s]
+[t=0.085696s, 33316 KB] done!
+[t=0.105688s, 37212 KB] Initializing goal count heuristic...
+[t=0.108396s, 38632 KB] Simplifying 32976 unary operators... done! [24656 unary operators]
+[t=0.124398s, 39028 KB] time to simplify: 0.016001s
+[t=0.124398s, 39528 KB] Initializing additive heuristic...
+[t=0.124398s, 39528 KB] Initializing FF heuristic...
+[t=0.128399s, 39528 KB] Building successor generator...done!
+[t=0.128399s, 39528 KB] peak memory difference for successor generator creation: 0 KB
+[t=0.128399s, 39528 KB] time for successor generation creation: 0.000000s
+[t=0.128399s, 39528 KB] Variables: 107
+[t=0.128399s, 39528 KB] FactPairs: 371
+[t=0.128399s, 39528 KB] Bytes per state: 24
+[t=0.128399s, 39528 KB] Building successor generator...done!
+[t=0.128399s, 39528 KB] peak memory difference for successor generator creation: 0 KB
+[t=0.128399s, 39528 KB] time for successor generation creation: 0.000000s
+[t=0.128399s, 39528 KB] Variables: 107
+[t=0.128399s, 39528 KB] FactPairs: 371
+[t=0.128399s, 39528 KB] Bytes per state: 24
+[t=0.128399s, 39528 KB] Starting search: ehc
+[t=0.128399s, 39528 KB] Conducting enforced hill-climbing search, (real) bound = 2147483647
+[t=0.128399s, 39528 KB] Using preferred operators for pruning
+[t=0.132401s, 40296 KB] Initial heuristic value for cea: 16614
+[t=0.132401s, 40296 KB] New best heuristic value for cea: 16614
+[t=0.132401s, 41032 KB] New best heuristic value for cea: 16456
+[t=0.136401s, 41388 KB] New best heuristic value for cea: 16406
+[t=0.136401s, 41520 KB] New best heuristic value for cea: 13161
+[t=0.136401s, 42048 KB] New best heuristic value for cea: 11860
+[t=0.140401s, 42448 KB] New best heuristic value for cea: 10518
+[t=0.140401s, 42844 KB] New best heuristic value for cea: 9363
+[t=0.152402s, 43768 KB] New best heuristic value for cea: 7984
+[t=0.156403s, 44164 KB] New best heuristic value for cea: 7334
+[t=0.160404s, 44560 KB] New best heuristic value for cea: 7208
+[t=28.271867s, 66336 KB] New best heuristic value for cea: 7202
+[t=28.271867s, 66336 KB] New best heuristic value for cea: 7082
+[t=28.275867s, 66336 KB] New best heuristic value for cea: 7074
+[t=54.682779s, 68568 KB] New best heuristic value for cea: 7068
+[t=54.682779s, 68568 KB] New best heuristic value for cea: 6948
+Peak memory: 68568 KB
+caught signal 24 -- exiting
+Time limit has been reached.
+Remove intermediate file output.sas
+search exit code: 23
+
+Driver aborting after search
+INFO     Planner time: 59.37s

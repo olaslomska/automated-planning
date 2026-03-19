@@ -10,7 +10,7 @@ import os
 alias = input()
 runtime = [0.0]
 num = [2]
-while(runtime[-1] < 59.0):
+while(runtime[-1] < 59.0 or alias == 'seq-sat-fdss-2' or alias == 'seq-sat-fd-autotune-2'):
     try:
         if not os.path.exists(f"drone_problem_d1_r1_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"):
             program = subprocess.run(["python3","./generate-problem_P2_cost.py", "-d", "1", "-r", "1" ,"-l" ,f"{num[-1]}" ,"-p", f"{num[-1]}" ,"-c" ,f"{num[-1]}" ,"-g", f"{num[-1]}"], capture_output=True, text=True)
@@ -18,7 +18,7 @@ while(runtime[-1] < 59.0):
         print(f"Command failed with return code {e.returncode}")
     start = time.perf_counter()
     try:
-        if alias == 'seq-opt-fdss-2' or alias == 'seq-sat-fdss-2':
+        if alias == 'seq-opt-fdss-2' or alias == 'seq-sat-fdss-2' or alias == 'seq-sat-fd-autotune-2':
             result = subprocess.run(["planutils", "run", "downward","--", "--alias", f"{alias}", "--overall-time-limit", "60","domain.pddl", f"drone_problem_d1_r1_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"], capture_output=True, text=True)
         elif alias == 'metric-ff':
             result = subprocess.run(["planutils", "run", "metric-ff", "domain.pddl", f"drone_problem_d1_r1_l{num[-1]}_p{num[-1]}_c{num[-1]}_g{num[-1]}_ct2.pddl"], capture_output=True, text=True)
@@ -33,9 +33,9 @@ while(runtime[-1] < 59.0):
     with open(file_name, "w") as f:
         f.write(result.stdout)
 
-    new_num = num[-1] + 1
+    new_num = num[-1] + 5
     new_runtime = end - start
-    if new_runtime < 60.0:
+    if new_runtime < 60.0 or alias == 'seq-sat-fdss-2' or alias == 'seq-sat-fd-autotune-2':
         num.append(new_num)
         runtime.append(new_runtime)
         print(new_runtime)
