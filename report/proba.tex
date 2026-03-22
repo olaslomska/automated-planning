@@ -352,8 +352,8 @@ By adding the carriers the plan length was improved. The reason for that is the 
 \textbf{Planner} & \textbf{Alias} & \textbf{Max problem size} & \textbf{Cost(biggest problem)} & \textbf{Cost(size 5)}\\ \hline
 Metric-ff & NONE & 11 (time 0.1s) & 2476 & 1472\\ \hline
 Fast Downward & lama-first & 125 & 34490 & 1472\\ \hline
-Fast Downward & seq-sat-fd-autotune-2 & 7 & 637 & 723\\ \hline
-Fast Downward & seq-sat-fdss-2 & 12 & 1818 & 723 \\ \hline
+Fast Downward & seq-sat-fd-autotune-2 & 37 & 10436 & 723\\ \hline
+Fast Downward & seq-sat-fdss-2 & 78 & 22596 & 723 \\ \hline
 \end{tabular}%
 }
 Metrif-ff has been measured only up to problem size 11. Bigger problems did not execute, most probably because of Metric-ff problem size limitations. 
@@ -361,20 +361,23 @@ Satisficing planners do not guarantee the lowest possible cost. They ain to find
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Metric-FF} - uses Enforced Hill-Climbing and the Fast-Forward heuristic. As shown in the snippet below (problem size 5) it prioritizes speed over quality, evaluating only 58 states. This blind sprinting results in highly unoptimized routing: for example, instead of maximizing carrier capacity, it makes multiple redundant round-trips to the exact same location, resulting in a cost of 1472 for size 5 (double the optimal cost).
+  \item \textbf{Metric-FF} - uses Enforced Hill-Climbing and the Fast-Forward heuristic. As shown in the snippet below (problem size 5) it prioritizes speed over quality, evaluating only 58 states. This results in unoptimized routing: for example, instead of maximizing carrier capacity, it makes multiple redundant round-trips to the exact same location, resulting in a cost of 1472 for size 5 (double the optimal cost).
   \begin{lstlisting}
 ff: search configuration is Enforced Hill-Climbing, then A*epsilon with weight 5.
 ...
 Cueing down from goal distance:    11 into depth [1]
 ...
-        8: PICK-AND-DROP CRATE3 LOC1 DRONE1 CARRIER1 PERSON3 FOOD N1 N0
-        9: MOVE-CARRIER LOC1 DEPOT DRONE1 CARRIER1
+		3: PICK-AND-DROP CRATE5 LOC1 DRONE1 CARRIER1 PERSON1 MEDICINE N2 N1
+        4: PICK-AND-DROP CRATE4 LOC1 DRONE1 CARRIER1 PERSON1 FOOD N1 N0
+        5: MOVE-CARRIER LOC1 DEPOT DRONE1 CARRIER1
+        6: PUT-CRATE-IN-CARRIER CRATE3 DEPOT DRONE1 CARRIER1 N0 N1
+        7: MOVE-CARRIER DEPOT LOC1 DRONE1 CARRIER1
 ...
 plan cost: 1472.000000
 time spent: ... 0.00 seconds searching, evaluating 58 states, to a max depth of 4
   \end{lstlisting}
 
-  \item \textbf{lama-first} - to maximize speed, it temporarily sets all action costs to 1. It stops immediately after finding first valid plan. This lack of optimization allows it solve big problems within short time (as shown in the snippet below taken from the output of a problem size 125, it generated over 3 million states), but the cost is higher than when that of other alises.
+ \item \textbf{lama-first} - to maximize speed, it temporarily sets all action costs to 1. It stops immediately after finding the first valid plan. Its extreme efficiency comes from using a multi-heuristic search approach: it guides the Greedy Best-First Search using both the delete-relaxation heuristic (hFF) and the Landmark heuristic simultaneously. This lack of optimization allows it to solve massive problems within a short time (as shown in the snippet below taken from the output of a problem size 125, it generated over 3 million states), but the cost is higher than that of other aliases for problems of the same size.
   \begin{lstlisting}
 [t=5.824840s] Discovered 394 landmarks...
 ...
@@ -441,7 +444,7 @@ All of the optimal planners returned the same optimal cost for the same problem.
 \end{table}
 
 \begin{itemize}
-  \item seq-opt-lmcut - builds graphs and makes mathematical cuts to find the best solution. Cuts are costly in time, so the planner managed to find a solution to the smallest size of a problem out of all optimal planners. The cost for size 7 is smaller than the cost for size 5 due to random values of action costs and random map geography generated for each problem. As seen in the log, its initial optimistic guess for the remaining cost was 235.
+  \item \textbf{seq-opt-lmcut} - uses the Landmark-Cut heuristic. While the basic landmark heuristic (counting unachieved landmarks) is inadmissible and used only in satisficing planners, LM-cut is an admissible formulation. It builds relaxed planning graphs and makes mathematical graph cuts to find the optimal cost without ever overestimating it. Because guaranteeing admissibility and computing these cuts is expensive in time, the planner managed to find a solution only up to size 7. The cost for size 7 is smaller than the cost for size 5 due to random values of action costs. As seen in the log, its initial optimistic guess for the remaining cost was 235.
    \begin{lstlisting}
 [t=0.005246s] Initial heuristic value for lmcut: 235
 ...
@@ -450,7 +453,7 @@ All of the optimal planners returned the same optimal cost for the same problem.
 [t=0.326094s] Solution found!
   \end{lstlisting}
 
-  \item seq-opt-bjopl - scans the problem to discover the landmarks (actions that must happen). Finding the landmarks takes most of the search time. To guarantee optimality without double-counting the costs of overlapping actions, it uses optimal "cost partitioning" (as seen in the log).
+  \item \textbf{seq-opt-bjopl} - scans the problem to discover the landmarks. Finding the landmarks takes most of the search time. Instead of simply summing the costs of achieving landmarks which could lead to inadmissible double-counting of actions that contribute to multiple landmarks at once, it divides the original action costs among them in log it is called "cost partitioning".
  \begin{lstlisting}
 [t=0.005181s] Merging 2 landmark graphs
 [t=0.006838s] Discovered 23 landmarks...
@@ -460,7 +463,7 @@ All of the optimal planners returned the same optimal cost for the same problem.
 [t=0.099509s] Solution found!
 [t=0.099524s] Actual search time: 0.091956s
   \end{lstlisting}
-  \item seq-opt-fdss-2 - is an optimal planner that primarily uses a precalculated table to search for the solution with the merge-and-shrink algorithm. It compresses the problem into an table before the search begins. Searching this precalculated table during runtime is faster than the complex on-the-fly math done by other planners, allowing it to scale to the largest problem sizes of the optimal group.
+  \item \textbf{seq-opt-fdss-2} - is an optimal planner that primarily uses a precalculated table to search for the solution with the merge-and-shrink algorithm. It compresses the problem into an table before the search begins. Searching this precalculated table during runtime is faster than the complex on-the-fly math done by other planners, allowing it to scale to the largest problem sizes of the optimal group.
   \begin{lstlisting}
   \begin{lstlisting}
 [t=0.007845s] Running merge-and-shrink algorithm...
