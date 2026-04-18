@@ -13,14 +13,14 @@ The repository is divided into several main directories representing the differe
 
 ## Contributions
 
-### Ola Słomska (`olaslomska`)
+### Aleksandra Słomska (`olaslomska`)
 - **Initial Setup:** Initialized the repository and designed the initial baseline PDDL domains and predicates.
 - **Problem & Script Generation:** Developed the Python problem generators (`generate-problem.py`) and test execution scripts across multiple phases (e.g., `run_tests_P2`).
 - **Phase 2 Development:** Implemented changes for Phase 2, including adding action costs and updating the domain logic.
 - **Experiment Execution:** Ran extensive tests utilizing different planners (e.g., LAMA) and gathered performance metrics.
 - **Visualization:** Handled the creation of Matplotlib graphs, performance plots, and their integration into the final LaTeX report.
 
-### Zosia Narloch (`zosianarloch`)
+### Zofia Narloch (`zosianarloch`)
 - **Problem Instances:** Wrote and refined hand-crafted PDDL problem instances and generated execution plans across multiple phases.
 - **Algorithm Testing:** Conducted extensive testing and comparison of various planning algorithms (BFS, IDS, A*, GBFS) and heuristics, analyzing performance metrics such as plan length and execution time across different problem sizes.
 - **Evaluation & Analysis:** Conducted dedicated tests and comparisons for specific assignment questions (e.g., sections 1.2, 1.3, and 2.1).
