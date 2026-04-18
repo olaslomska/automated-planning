@@ -152,6 +152,9 @@ In the second exercise, the performance of the FF planner was tested. We created
 
 \section{Exercise 1.3: Performance Comparison of Search Algorithms and
 Heuristics}
+
+The pyperplan planner was used to run uninformed search algorithms (BFS, IDS) and informed search algorithms (A*, GBFS, EHC). The algorithms were tested with specific heuristics: hMAX, hADD, hFF, Landmark, and LMCUT. A Python script was used to incrementally generate and execute problems with a 60-second timeout limit
+
 \subsection{First Part}
 
 \begin{table}[H]
@@ -356,7 +359,8 @@ Fast Downward & seq-sat-fd-autotune-2 & 37 & 10436 & 723\\ \hline
 Fast Downward & seq-sat-fdss-2 & 78 & 22596 & 723 \\ \hline
 \end{tabular}%
 }
-Metrif-ff has been measured only up to problem size 11. Bigger problems did not execute, most probably because of Metric-ff problem size limitations. 
+
+Metric-ff has been measured only up to problem size 11. Bigger problems did not execute, most probably because of Metric-ff problem size limitations. 
 Satisficing planners do not guarantee the lowest possible cost. They ain to find a  valid plan before the time limit expires. They value speed over optimal outcome, so they can scale to larger problems.
 \end{table}
 
@@ -476,6 +480,171 @@ All of the optimal planners returned the same optimal cost for the same problem.
 
 \section{Exercise 3: Concurrent actions in emergency management}
 
+The \texttt{:durative-actions} requirement was added to the domain. Actions were converted to durative actions using \texttt{at start}, \texttt{over all}, and \texttt{at end} blocks for conditions and effects. The \texttt{duration} of non-flight actions was explicitly set to 5 seconds, and flight action duration was defined by the \texttt{fly-cost} function. The Optic planner was utilized in "anytime" mode to generate concurrent plans. The Python testing script was modified to include a strict 60-second timeout limit.
+
+\begin{lstlisting}
+(define (domain p3)
+(:requirements :strips :typing :durative-actions :numeric-fluents)
+
+(:types 
+    location 
+    crate 
+    content
+    person
+    drone
+    carrier
+    num
+) 
+
+(:predicates 
+    (person-at ?person - person ?location - location)
+    (crate-at ?crate - crate ?location - location)
+    (content-crate ?content - content ?crate - crate)
+    (has-content-person ?person - person ?content - content)
+    (drone-at ?drone - drone ?location - location)
+    (carrier-at ?carrier - carrier ?location - location)
+    (next-num ?numA - num ?numB - num) 
+    (in-carrier ?crate - crate ?carrier - carrier)
+    (crates-in-carrier ?carrier - carrier ?n - num)
+    (carrier-capacity ?carrier - carrier ?n - num)
+    (drone-free ?d - drone)
+    (carrier-free ?c - carrier)
+    (crate-free ?c - crate)
+    (person-free ?p - person)
+)
+
+(:functions
+    (fly-cost ?location_from - location ?location_to - location) - number
+)
+
+(:durative-action put-crate-in-carrier
+    :parameters (
+        ?crate - crate
+        ?location - location
+        ?drone - drone
+        ?carrier - carrier
+        ?n_current - num
+        ?n_next - num
+    )
+    :duration (= ?duration 5)
+    :condition (and 
+        (at start (and 
+            (crate-at ?crate ?location) 
+            (crates-in-carrier ?carrier ?n_current) 
+            (drone-free ?drone)
+            (carrier-free ?carrier)
+            (crate-free ?crate)     
+            )
+        )
+        (over all (and
+            (drone-at ?drone ?location) 
+            (carrier-at ?carrier ?location)
+            (next-num ?n_current ?n_next)  
+        ))                  
+    )
+    :effect (and
+        (at start (and 
+            (not (drone-free ?drone))
+            (not (carrier-free ?carrier))
+            (not (crate-free ?crate)) 
+            (not (crate-at ?crate ?location))  
+            (not (crates-in-carrier ?carrier ?n_current))  
+        ))
+        (at end (and 
+            (drone-free ?drone)
+            (carrier-free ?carrier)
+            (crate-free ?crate)  
+            (crates-in-carrier ?carrier ?n_next)
+            (in-carrier ?crate ?carrier)  
+        ))
+    )
+)
+
+(:durative-action move-carrier
+    :parameters (
+        ?location_from - location
+        ?location_to - location
+        ?drone - drone
+        ?carrier - carrier
+    )
+    :duration (= ?duration (fly-cost ?location_from ?location_to))
+    :condition (and 
+        (at start (and
+            (drone-at ?drone ?location_from)
+            (carrier-at ?carrier ?location_from)
+            (drone-free ?drone)
+            (carrier-free ?carrier)
+        ))
+    )
+    :effect (and 
+        (at start (and
+            (not (drone-free ?drone))
+            (not (carrier-free ?carrier))
+            (not (drone-at ?drone ?location_from))
+            (not (carrier-at ?carrier ?location_from))
+        ))
+        (at end (and
+            (drone-free ?drone)
+            (carrier-free ?carrier)
+            (drone-at ?drone ?location_to)
+            (carrier-at ?carrier ?location_to) 
+        ))        
+    )
+)
+
+(:durative-action pick-and-drop
+    :parameters (
+        ?crate - crate
+        ?location - location
+        ?drone - drone
+        ?carrier - carrier
+        ?person - person
+        ?content - content 
+        ?n_current - num
+        ?n_prev - num
+    )
+    :duration (= ?duration 5)
+    :condition (and 
+        (at start (and 
+            (drone-at ?drone ?location)       
+            (carrier-at ?carrier ?location)
+            (in-carrier ?crate ?carrier)
+            (person-at ?person ?location)           
+            (content-crate ?content ?crate) 
+            (crates-in-carrier ?carrier ?n_current)
+            (next-num ?n_prev ?n_current)
+            (drone-free ?drone)
+            (carrier-free ?carrier)
+            (person-free ?person)
+            (crate-free ?crate)
+        ))
+        (over all (and
+            (drone-at ?drone ?location) 
+            (carrier-at ?carrier ?location)
+            (person-at ?person ?location)           
+        ))                  
+    )
+    :effect (and
+        (at start (and 
+            (not (crates-in-carrier ?carrier ?n_current))
+            (crates-in-carrier ?carrier ?n_prev)
+            (not (in-carrier ?crate ?carrier))          
+            (not (drone-free ?drone))
+            (not (carrier-free ?carrier))
+            (not (person-free ?person))
+            (not (crate-free ?crate))
+                ))
+        (at end (and 
+            (drone-free ?drone)
+            (carrier-free ?carrier)
+            (person-free ?person)
+            (crate-free ?crate)
+            (has-content-person ?person ?content) 
+        ))
+    )
+)
+)
+\end{lstlisting}
 \begin{table}[H]
 \centering
 \resizebox{\textwidth}{!}{%
