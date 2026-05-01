@@ -1,0 +1,68 @@
+(defdomain p1
+  (
+
+    (:operator (!pick-up-crate ?crate ?location ?drone ?arm)
+      ((empty-arm ?drone ?arm) 
+       (drone-at ?drone ?location) 
+       (crate-at ?crate ?location))
+      ((empty-arm ?drone ?arm) 
+       (crate-at ?crate ?location))
+      ((has-crate-drone-arm ?drone ?arm ?crate))
+    )
+
+    (:operator (!drone-move ?location_from ?location_to ?drone)
+      ((drone-at ?drone ?location_from))
+      ((drone-at ?drone ?location_from))
+      ((drone-at ?drone ?location_to))
+    )
+
+    (:operator (!drop-crate ?location ?person ?crate ?arm ?content ?drone)
+      ((person-at ?person ?location) 
+       (drone-at ?drone ?location) 
+       (has-crate-drone-arm ?drone ?arm ?crate) 
+       (content-crate ?content ?crate))
+      ((has-crate-drone-arm ?drone ?arm ?crate))
+      ((has-content-person ?person ?content) 
+       (empty-arm ?drone ?arm))
+    )
+
+    (:method (move-drone ?drone ?loc-to)
+      already-there
+      ((drone-at ?drone ?loc-to))
+      ()
+      
+      need-to-move
+      ((drone-at ?drone ?loc-from) (not (same ?loc-from ?loc-to)))
+      ((!drone-move ?loc-from ?loc-to ?drone))
+    )
+
+    (:method (deliver ?person ?content)
+      do-delivery
+      (
+       (content-crate ?content ?crate) 
+       (crate-at ?crate ?loc-crate) 
+       (person-at ?person ?loc-person) 
+       (drone-at ?drone ?loc-drone) 
+       (empty-arm ?drone ?arm))
+      (
+       (move-drone ?drone ?loc-crate)
+       (!pick-up-crate ?crate ?loc-crate ?drone ?arm)
+       (move-drone ?drone ?loc-person)
+       (!drop-crate ?loc-person ?person ?crate ?arm ?content ?drone))
+    )
+
+    (:method (deliver-all)
+      deliver-next
+      ((needs-content ?person ?content) 
+       (not (has-content-person ?person ?content)))
+      (
+       (deliver ?person ?content) 
+       (deliver-all))
+      finish-delivery
+      () 
+      ()
+    )
+    
+    (:- (same ?x ?x) nil)
+  )
+)

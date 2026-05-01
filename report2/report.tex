@@ -1,0 +1,122 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[justification=centering]{caption}
+\usepackage{float}
+
+% --- Definicja kolorów ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% --- Definicja języka PDDL ---
+\lstdefinelanguage{PDDL}{
+  sensitive=false,    % PDDL nie jest wrażliwy na wielkość liter
+  morecomment=[l]{;}, % Komentarze w PDDL zaczynają się od średnika
+  alsoletter={-,:},   % Zezwala na myślniki i dwukropki w słowach kluczowych
+  morekeywords={
+    define, domain, problem, and, or, not, imply, exists, forall, when,
+    increase, decrease, assign, scale-up, scale-down,
+    :domain, :requirements, :types, :constants, :predicates, :functions,
+    :action, :parameters, :precondition, :effect, 
+    :durative-action, :duration, :condition, 
+    :objects, :init, :goal, :metric
+  }
+}
+
+% --- Konfiguracja ogólnego stylu ---
+\lstset{
+  language=PDDL,
+  backgroundcolor=\color{backcolour},   
+  commentstyle=\color{codegreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,                    
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+
+\usepackage{graphicx}
+
+
+\title{Hierarchal planning with JSHOP2}
+\author{Aleksandra Słomska \\ Zofia Narloch}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Exercise 1.1: Emergency Service Logistics, Initial Release}
+In the first exercise, similarly as in PDDL laboratories domain file have been created. \\
+The best performing algorithm in part 1.3 of PDDL project was BFS without any heuristics.In time of 0.77s it managed to find a solution to a problem of size 17. Meanwhile JSOP hierarchal planner managed to solve a problem with size 380. 
+
+\begin{lstlisting}
+(defproblem problem p1
+  (
+	(drone-at drone1 depot)
+	(crate-at crate1 depot)
+	(crate-at crate2 depot)
+	(crate-at crate3 depot)
+	(empty-arm drone1 left)
+	(empty-arm drone1 right)
+	(content-crate food crate1)
+	(content-crate food crate2)
+	(content-crate medicine crate3)
+	(person-at person1 loc1)
+	(person-at person2 loc3)
+	(person-at person3 loc2)
+	(needs-content person2 food)
+	(needs-content person2 medicine)
+	(needs-content person3 food)
+  )
+
+  (
+	(deliver-all)
+  )
+)
+\end{lstlisting}
+\begin{lstlisting}
+(!pick-up-crate crate1 depot drone1 left)
+(!drone-move depot loc3 drone1)
+(!drop-crate loc3 person2 crate1 left food drone1)
+(!drone-move loc3 depot drone1)
+(!pick-up-crate crate3 depot drone1 right)
+(!drone-move depot loc3 drone1)
+(!drop-crate loc3 person2 crate3 right medicine drone1)
+(!drone-move loc3 depot drone1)
+(!pick-up-crate crate2 depot drone1 left)
+(!drone-move depot loc2 drone1)
+(!drop-crate loc2 person3 crate2 left food drone1)
+--------------------
+
+Time Used = 0.009
+\end{lstlisting}
+
+\begin{lstlisting}[caption={First problem and the outcome - three people and three boxes}, label={lst:pddl-example}]
+
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Figure_1} 
+    \caption{Size of the problem and the time required to find a solution in the tests}
+    \label{fig:figure1}
+\end{figure}
+It is important to note that time shown on the graph is measured by a python script. Time used measured by JSHOP was below 1 second for all problems.
+
+\clearpage
+
+
+\end{document}
