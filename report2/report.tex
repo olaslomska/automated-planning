@@ -149,4 +149,64 @@ The downside is that JSHOP2 does not guarantee an optimal plan. In example above
 
 \end{itemize}
 
+\section{Advanced Emergency Logistics Domain}
+In the second part of the exercise, we upgraded our JSHOP2 domain to handle more realistic logistics using numerical fluents and transporters. Instead of dealing with individual crates and people, the drone now manages overall quantities.
+
+\subsection{How It Works}
+We completely changed how the drone makes decisions by breaking deliveries down into a two-step process:
+\begin{enumerate}
+    \item \textbf{Filling the Transporter:} The drone stays at the depot and continues loading boxes into the transporter until it hits maximum capacity or all needs are assigned.
+    \item \textbf{Dispatching:} The drone flies the transporter to the required locations, dropping off the exact amounts needed before returning.
+\end{enumerate}
+
+To make the drone smart enough to handle the 11 specific edge cases from the assignment, we added custom LISP axioms. These allow the planner to evaluate the current state and actively choose the \textit{smallest} transporter that fits the cargo, or the \textit{largest} available if nothing fits perfectly. It also dynamically prioritizes locations with the greatest need. Finally, we introduced a \texttt{reserved} fluent to securely keep track of which boxes inside the transporter belong to which destination.
+
+\subsection{Flight Cost}
+The cost of moving a drone without a transporter has a base cost of 50. When carrying a transporter, the cost increases proportionally to the transporter's capacity: $\text{cost} = 50 + \frac{\text{capacity}}{10}$. For example, a transporter with capacity 100 costs 60 per flight.
+
+\subsection{Testing the Scenarios}
+We generated different problem files to verify all 11 required situations. The table below summarizes how each one is handled:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|c|p{8cm}|p{4cm}|}
+\hline
+\textbf{\#} & \textbf{Situation} & \textbf{Method Used} \\ \hline
+1 & No transporters available & \texttt{fallback-single-box} \\ \hline
+2 & One transporter available & \texttt{use-transporter} \\ \hline
+3 & Different box types on the same transporter & \texttt{fill-transporter} loop \\ \hline
+4 & Remaining boxes delivered without transporter & \texttt{fallback-single-box} \\ \hline
+5 & Transporter smaller than need $\rightarrow$ load to max & \texttt{load-partial} branch \\ \hline
+6 & Transporter larger than need $\rightarrow$ partial load & \texttt{load-fits} branch \\ \hline
+7 & Multiple transporters fit $\rightarrow$ choose smallest & axiom: \texttt{smaller-fitting-} \texttt{transporter-exists} \\ \hline
+8 & All transporters too small $\rightarrow$ choose largest & axiom: \texttt{larger-transporter-} \texttt{exists} \\ \hline
+9 & Re-evaluate after each depot return & recursive \texttt{deliver-all} \\ \hline
+10 & Serve greatest need first & axiom: \texttt{greater-need-exists} \\ \hline
+11 & Multi-location trip without returning to depot & \texttt{dispatch-transporter} \\ \hline
+\end{tabular}
+\caption{The 11 required situations and how they are handled in the domain.}
+\label{tab:situations}
+\end{table}
+
+Below is an example plan that demonstrates several of these situations at once (3, 6, 11). The drone loads both food and medicine at the depot, delivers to \texttt{loc2}, and then continues directly to \texttt{loc3} without returning:
+
+\begin{lstlisting}[caption={Multi-stop plan: different box types delivered across multiple locations in one trip}, label={lst:pddl-multi-stop}]
+(!reserve-delivery carrier1 food loc2 1.0)
+(!load-transporter carrier1 food 1.0 depot drone1)
+(!reserve-delivery carrier1 medicine loc2 1.0)
+(!load-transporter carrier1 medicine 1.0 depot drone1)
+(!reserve-delivery carrier1 food loc3 1.0)
+(!load-transporter carrier1 food 1.0 depot drone1)
+(!drone-move-transporter depot loc2 drone1 carrier1)
+(!unload-transporter carrier1 food 1.0 loc2 drone1)
+(!unload-transporter carrier1 medicine 1.0 loc2 drone1)
+(!drone-move-transporter loc2 loc3 drone1 carrier1)
+(!unload-transporter carrier1 food 1.0 loc3 drone1)
+(!drone-move-transporter loc3 depot drone1 carrier1)
+\end{lstlisting}
+
+\clearpage
+
+
 \end{document}
