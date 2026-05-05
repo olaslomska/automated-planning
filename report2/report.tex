@@ -58,9 +58,9 @@
 
 \section{Exercise 1.1: Emergency Service Logistics, Initial Release}
 
-In this exercise we recreated the Emergency Service Logistics domain from the PDDL labs, but this time using JSHOP2, which is a hierarchical planner. The main difference is that instead of just describing what actions are possible (like in PDDL), we also have to tell the planner \textit{how} to organize those actions into higher-level tasks.
+In this exercise we recreated the Emergency Service Logistics domain from the PDDL labs, but this time using JSHOP2, which is a hierarchical planner. The main difference is that instead of just describing what actions are possible (like in PDDL), we also have to tell the planner how to organize those actions into higher-level tasks.
 
-Below is an example problem we defined for JSHOP2. There are three people at different locations, and the drone needs to deliver food and medicine to them:
+Below is an example problem we defined for JSHOP2. There are three people, three locations and three crates:
 
 \begin{lstlisting}
 (defproblem problem p1
@@ -88,7 +88,7 @@ Below is an example problem we defined for JSHOP2. There are three people at dif
 )
 \end{lstlisting}
 
-Here the goal is just (deliver-all) — a single high-level task. In PDDL, we would instead write out each individual goal condition explicitly, like (has-content-person person2 food) and (has-content-person person2 medicine). In JSHOP2, we let the task hierarchy figure out what needs to be done.
+Here the goal is just (deliver-all) — a single high-level task. In PDDL, we would instead define each individual goal condition, like (has-content-person person2 food) and (has-content-person person2 medicine). In JSHOP2, we let the task hierarchy figure out what needs to be done.
 
 The planner produced the following plan:
 
@@ -109,7 +109,7 @@ The planner produced the following plan:
 Time Used = 0.009
 \end{lstlisting}
 
-The plan looks very similar to what PDDL planners produce — the individual actions (pick up, move, drop) are the same. The difference is in how the planner \textit{found} the plan, not in what the plan looks like.
+The plan looks very similar to what PDDL planners — the individual actions are the same. The difference is in how the planner found the plan.
 
 \begin{figure}[H]
     \centering
@@ -118,24 +118,24 @@ The plan looks very similar to what PDDL planners produce — the individual act
     \label{fig:figure1}
 \end{figure}
 
-It is important to note that the time shown on the graph is measured by the Python script. The time reported by JSHOP2 itself was below 1 second for every single problem. The graph shows that even at size 380 the total time was around 3.2 seconds — and most of that is the Python overhead.
+It is important to note that the time shown on the graph is measured by the Python script. The time reported by JSHOP2 itself was below 1 second for every single problem. The graph shows that even at size 380 the total time was around 3.2 seconds — and most of that is from the Python script.
 
 \subsection{Comparison with Classical Planning (BFS from Exercise 1.3)}
 
 In Part 1.3 of the PDDL project, we tested several search algorithms. The best performing one was BFS (Breadth-First Search) with no heuristic. It solved a problem of size 17 in just 0.77 seconds. That was the largest problem any algorithm could solve within the 60-second time limit.
 
-Now, JSHOP2 solved a problem of size \textbf{380} in under one second of actual planning time. That is more than 22 times larger. This is a huge difference, and it is worth understanding why.
+JSHOP2 solved a problem of size 380 in under one second of actual planning time. That is more than 22 times larger.
 
-BFS works by expanding every possible state one step at a time, level by level. In our domain, the drone has many valid moves at each step — it can pick up different crates, move to different locations, drop with different arms, and so on. The number of states grows extremely fast as the problem gets bigger. By size 17, BFS was already hitting the 60-second wall because it had to check too many combinations. 
+BFS works by expanding every possible state one step at a time, level by level. In the domain, the drone has many valid moves at each step — it can pick up different crates, move to different locations. The number of states grows fast as the problem gets bigger. By size 17, BFS was already reaching the 60-second exection time because it had to check too many combinations. 
 
 JSHOP2 does not search through states in the same way. Instead, it follows a task hierarchy that was defined in the domain file. The top-level task (deliver-all) is broken down into smaller tasks, like delivering to each person one at a time. Each of those is broken down further into concrete actions: pick up a crate, fly to the person, drop the crate.
 
-The downside is that JSHOP2 does not guarantee an optimal plan. In example above, the drone goes to loc3 twice to deliver food and medicine separately to person2, even though it could have carried both crates at once. BFS, on the other hand, would find the shortest possible plan because it explores all options at each depth level. In this domain, every BFS plan had length 17, which is optimal.
+The downside is that JSHOP2 does not guarantee an optimal plan. In example above, the drone goes to loc3 twice to deliver food and medicine separately to person2, even though it could have carried both crates at once. BFS, would find the shortest possible plan because it explores all options at each depth level.
 
 \subsection{Advantages of Hierarchical Planning}
 
 \begin{itemize}
-    \item \textbf{Scalability.} While BFS could not go past size 17, JSHOP2 handled size 380 comfortably. 
+    \item \textbf{Scalability.} While BFS could not go past size 17, JSHOP2 handled size 380. 
 
     \item \textbf{Speed.} The planner commits to a plan quickly by following the hierarchy. There is no exhaustive search.
 \end{itemize}
