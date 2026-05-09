@@ -1,0 +1,329 @@
+(defdomain p3
+  (
+    (:- (same ?x ?x) nil)
+
+    (:- (has-needs)
+        ((needs ?type ?loc ?count) (call >= ?count 1)))
+
+    (:- (greater-need-exists ?count)
+        ((needs ?type ?loc ?value) (call > ?value ?count)))
+
+    (:- (carrier-can-fit ?need)
+        ((carrier-at ?c depot)
+         (carrier-capacity ?c ?cap)
+         (call >= ?cap ?need)))
+
+    (:- (better-fitting-carrier-exists ?need ?cap)
+        ((carrier-at ?c depot)
+         (carrier-capacity ?c ?c2)
+         (call >= ?c2 ?need)
+         (call < ?c2 ?cap)))
+
+    (:- (larger-available-carrier-exists ?cap)
+        ((carrier-at ?c depot)
+         (carrier-capacity ?c ?c2)
+         (call > ?c2 ?cap)))
+
+    (:operator (!drone-move ?loc-from ?loc-to ?drone)
+      ((drone-at ?drone ?loc-from)) 
+      ((drone-at ?drone ?loc-from))
+      ((drone-at ?drone ?loc-to))
+      50
+    )
+
+    (:operator (!drone-move-carrier ?loc-from ?loc-to ?drone ?carrier)
+      ((drone-at ?drone ?loc-from)
+       (carrier-at ?carrier ?loc-from)
+       (carrier-capacity ?carrier ?cap))
+      ((drone-at ?drone ?loc-from)
+       (carrier-at ?carrier ?loc-from))
+      ((drone-at ?drone ?loc-to)
+       (carrier-at ?carrier ?loc-to))
+      (call + 50 (call / ?cap 10))
+    )
+
+    (:operator (!reserve-delivery ?carrier ?type ?loc ?quantity)
+      ((needs ?type ?loc ?need-count)
+       (call >= ?need-count ?quantity))
+      ((needs ?type ?loc ?need-count))
+      ((needs ?type ?loc (call - ?need-count ?quantity))
+       (reserved ?carrier ?type ?loc ?quantity))
+    )
+
+    (:operator (!load-carrier ?carrier ?type ?quantity ?loc ?drone)
+      ((drone-at ?drone ?loc)
+       (carrier-at ?carrier ?loc)
+       (crates-at ?type ?loc ?available)
+       (call >= ?available ?quantity)
+       (carrier-capacity ?carrier ?cap)
+       (carrier-total-load ?carrier ?current-total)
+       (call <= (call + ?current-total ?quantity) ?cap)
+       (carrier-content ?carrier ?type ?current-type-count))
+      ((crates-at ?type ?loc ?available)
+       (carrier-content ?carrier ?type ?current-type-count)
+       (carrier-total-load ?carrier ?current-total))
+      ((crates-at ?type ?loc (call - ?available ?quantity))
+       (carrier-content ?carrier ?type (call + ?current-type-count ?quantity))
+       (carrier-total-load ?carrier (call + ?current-total ?quantity)))
+    )
+
+    (:operator (!unload-carrier ?carrier ?type ?quantity ?loc ?drone)
+      ((drone-at ?drone ?loc)
+       (carrier-at ?carrier ?loc)
+       (carrier-content ?carrier ?type ?current-type-count)
+       (call >= ?current-type-count ?quantity)
+       (carrier-total-load ?carrier ?current-total)
+       (reserved ?carrier ?type ?loc ?quantity))
+      ((carrier-content ?carrier ?type ?current-type-count)
+       (carrier-total-load ?carrier ?current-total)
+       (reserved ?carrier ?type ?loc ?quantity))
+       ((carrier-content ?carrier ?type (call - ?current-type-count ?quantity))
+       (carrier-total-load ?carrier (call - ?current-total ?quantity)))
+    )
+
+    (:operator (!pick-up-crate-arm ?type ?loc-from ?loc-to ?drone ?arm)
+      ((drone-at ?drone ?loc-from)
+       (empty-arm ?drone ?arm)
+       (crates-at ?type ?loc-from ?avail)
+       (call >= ?avail 1)
+       (needs ?type ?loc-to ?need)
+       (call >= ?need 1))
+      ((empty-arm ?drone ?arm)
+       (crates-at ?type ?loc-from ?avail)
+       (needs ?type ?loc-to ?need))
+      ((holding-arm ?drone ?arm ?type ?loc-to)
+       (crates-at ?type ?loc-from (call - ?avail 1))
+       (needs ?type ?loc-to (call - ?need 1))) ; Rezerwuje zapotrzebowanie natychmiast
+    )
+
+    (:operator (!drop-crate-arm ?type ?loc ?drone ?arm)
+      ((drone-at ?drone ?loc)
+       (holding-arm ?drone ?arm ?type ?loc))
+      ((holding-arm ?drone ?arm ?type ?loc))
+      ((empty-arm ?drone ?arm)) ; Upuszcza i uwalnia ramię
+    )
+
+    (:method (move-drone-alone ?drone ?loc-to)
+      already-there
+      ((drone-at ?drone ?loc-to))
+      ()
+      need-to-move
+      ((drone-at ?drone ?loc-from)
+       (not (same ?loc-from ?loc-to)))
+      ((!drone-move ?loc-from ?loc-to ?drone))
+    )
+
+    (:method (move-drone-carrier ?drone ?carrier ?loc-to)
+      already-there
+      ((drone-at ?drone ?loc-to))
+      ()
+      need-to-move
+      ((drone-at ?drone ?loc-from)
+       (not (same ?loc-from ?loc-to)))
+      ((!drone-move-carrier ?loc-from ?loc-to ?drone ?carrier))
+    )
+
+    (:method (deliver-all)
+
+      finish-delivery
+      (not (has-needs))
+      ()
+
+      use-carrier-fits
+      (
+        (needs ?type ?loc ?need-count)
+        (call >= ?need-count 1)
+        (not (greater-need-exists ?need-count))
+        (carrier-at ?carrier depot)
+        (carrier-capacity ?carrier ?cap)
+        (call >= ?cap ?need-count)
+        (not (better-fitting-carrier-exists ?need-count ?cap))
+      )
+      (
+        (move-drone-alone drone1 depot)
+        (fill-specific ?carrier drone1 ?type ?loc)
+        (fill-any ?carrier drone1)
+        (dispatch-carrier ?carrier drone1)
+        (deliver-all)
+      )
+
+      use-carrier-partial
+      (
+        (needs ?type ?loc ?need-count)
+        (call >= ?need-count 1)
+        (not (greater-need-exists ?need-count))
+        (not (carrier-can-fit ?need-count))
+        (carrier-at ?carrier depot)
+        (carrier-capacity ?carrier ?cap)
+        (not (larger-available-carrier-exists ?cap))
+      )
+      (
+        (move-drone-alone drone1 depot)
+        (fill-specific ?carrier drone1 ?type ?loc)
+        (fill-any ?carrier drone1)
+        (dispatch-carrier ?carrier drone1)
+        (deliver-all)
+      )
+
+      use-drone-arms
+      (
+        (needs ?type ?loc ?need-count)
+        (call >= ?need-count 1)
+        (empty-arm drone1 ?arm)
+      )
+      (
+        (move-drone-alone drone1 depot)
+        (fill-arms drone1)
+        (dispatch-arms drone1)
+        (deliver-all)
+      )
+    )
+
+    (:method (fill-arms ?drone)
+      no-empty-arms
+      (not (empty-arm ?drone ?any-arm))
+      ()
+
+      load-arm
+      (
+        (empty-arm ?drone ?arm)
+        (needs ?type ?loc ?need)
+        (call >= ?need 1)
+      )
+      (
+        (!pick-up-crate-arm ?type depot ?loc ?drone ?arm)
+        (fill-arms ?drone) ; Rekurencja - szukaj kolejnych paczek do kolejnych wolnych ramion
+      )
+
+      no-more-needs
+      ()
+      ()
+    )
+
+    (:method (dispatch-arms ?drone)
+      deliver-next
+      (
+        (holding-arm ?drone ?arm ?type ?loc)
+      )
+      (
+        (move-drone-alone ?drone ?loc)
+        (!drop-crate-arm ?type ?loc ?drone ?arm)
+        (dispatch-arms ?drone) ; Zrzuca i leci do następnego celu
+      )
+
+      all-delivered
+      (
+        (not (holding-arm ?drone ?any-arm ?any-type ?any-loc))
+      )
+      (
+        (move-drone-alone ?drone depot) ; Wraca pusty do bazy
+      )
+    )
+
+    (:method (fill-specific ?carrier ?drone ?target-type ?target-loc)
+      full
+      (
+        (carrier-capacity ?carrier ?cap)
+        (carrier-total-load ?carrier ?load)
+        (call = ?cap ?load)
+      )
+      ()
+
+      load-fits
+      (
+        (needs ?target-type ?target-loc ?need)
+        (call >= ?need 1)
+        (carrier-capacity ?carrier ?cap)
+        (carrier-total-load ?carrier ?load)
+        (call <= (call + ?load ?need) ?cap)
+      )
+      (
+        (!reserve-delivery ?carrier ?target-type ?target-loc ?need)
+        (!load-carrier ?carrier ?target-type ?need depot ?drone)
+        (fill-specific ?carrier ?drone ?target-type ?target-loc)
+      )
+
+      load-partial
+      (
+        (needs ?target-type ?target-loc ?need)
+        (call >= ?need 1)
+        (carrier-capacity ?carrier ?cap)
+        (carrier-total-load ?carrier ?load)
+        (call > (call + ?load ?need) ?cap)
+        (call > (call - ?cap ?load) 0)
+      )
+      (
+        (!reserve-delivery ?carrier ?target-type ?target-loc (call - ?cap ?load))
+        (!load-carrier ?carrier ?target-type (call - ?cap ?load) depot ?drone)
+        (fill-specific ?carrier ?drone ?target-type ?target-loc)
+      )
+
+      target-fulfilled
+      ()
+      ()
+    )
+
+    (:method (fill-any ?carrier ?drone)
+      full
+      (
+        (carrier-capacity ?carrier ?cap)
+        (carrier-total-load ?carrier ?load)
+        (call = ?cap ?load)
+      )
+      ()
+
+      load-fits
+      (
+        (needs ?any-type ?any-loc ?need)
+        (call >= ?need 1)
+        (carrier-capacity ?carrier ?cap)
+        (carrier-total-load ?carrier ?load)
+        (call <= (call + ?load ?need) ?cap)
+      )
+      (
+        (!reserve-delivery ?carrier ?any-type ?any-loc ?need)
+        (!load-carrier ?carrier ?any-type ?need depot ?drone)
+        (fill-any ?carrier ?drone)
+      )
+
+      load-partial
+      (
+        (needs ?any-type ?any-loc ?need)
+        (call >= ?need 1)
+        (carrier-capacity ?carrier ?cap)
+        (carrier-total-load ?carrier ?load)
+        (call > (call + ?load ?need) ?cap)
+        (call > (call - ?cap ?load) 0)
+      )
+      (
+        (!reserve-delivery ?carrier ?any-type ?any-loc (call - ?cap ?load))
+        (!load-carrier ?carrier ?any-type (call - ?cap ?load) depot ?drone)
+        (fill-any ?carrier ?drone)
+      )
+
+      no-more-needs
+      () 
+      ()
+    )
+
+    (:method (dispatch-carrier ?carrier ?drone)
+      deliver-next
+      (
+        (reserved ?carrier ?type ?loc ?quantity)
+      )
+      (
+        (move-drone-carrier ?drone ?carrier ?loc)
+        (!unload-carrier ?carrier ?type ?quantity ?loc ?drone)
+        (dispatch-carrier ?carrier ?drone)
+      )
+
+      all-delivered
+      (
+        (not (reserved ?carrier ?any-type ?any-loc ?any-quantity))
+      )
+      (
+        (move-drone-carrier ?drone ?carrier depot)
+      )
+    )
+  )
+)

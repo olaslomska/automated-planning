@@ -15,11 +15,10 @@ while True:
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")
         
-    subprocess.run("rm -f *.java *.class p2/*.java p2/*.class", shell=True)
     
     start = time.perf_counter()
     try:
-        result = subprocess.run(["./jshop2-console.sh", "domains/p2/p2", "domains/p2/problem"], capture_output=True, text=True)
+        result = subprocess.run(["./jshop2-console.sh", "p2"], capture_output=True, text=True)
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")

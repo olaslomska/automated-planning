@@ -1,0 +1,110 @@
+;problem for:
+;If there are no transporters, the drone is able to carry individual boxes.
+;If, after using the transporter, there are still some loose boxes left, the drone is able to pick them up
+(defproblem prob-no-carriers p3
+  (
+    (drone-at drone1 depot)
+    (empty-arm drone1 arm1)
+
+    (crates-at food depot 5)
+    (needs food loc1 2)
+  )
+  (
+    (deliver-all)
+  )
+)
+
+;problem for:
+;If the transporter is smaller than the need, it loads to maximum capacity.
+;If the transporter is larger than the need, it loads partially.
+;If there are several transporters several fit, smallest is chosen.
+;If there are several transporters all too small, largest is chosen.
+;Every time the drone returns to the depot, it chooses next transporter based on updated needs.
+
+;Serves first those with the greatest need.
+
+(defproblem problem p3
+  (
+    (drone-at drone1 depot)
+    (carrier-at carrier1 depot)
+
+    (carrier-capacity carrier1 10)
+    (carrier-total-load carrier1 0)
+
+    (carrier-content carrier1 food 0)
+    (carrier-content carrier1 medicine 0)
+
+    (crates-at food depot 21) 
+    (crates-at medicine depot 20)
+
+    (needs food loc1 6)
+    (needs medicine loc1 3)
+    (needs food loc2 15)
+  )
+  (
+    (deliver-all)
+  )
+)
+
+
+;problem for:
+;If there is only one transporter, it is able to use it
+;Different types of boxes can be loaded onto the same transporter
+;If there are several locations and transporter allows serving more than one location without returning, it loads necessary boxes and delivers without returning
+
+(defproblem prob-smart-selection p3
+  (
+    (drone-at drone1 depot)
+    (empty-arm drone1 arm1)
+
+    (carrier-at carrier-small depot)
+    (carrier-capacity carrier-small 5)
+    (carrier-total-load carrier-small 0)
+    (carrier-content carrier-small food 0)
+    (carrier-content carrier-small medicine 0)
+
+    (carrier-at carrier-mid depot)
+    (carrier-capacity carrier-mid 10)
+    (carrier-total-load carrier-mid 0)
+    (carrier-content carrier-mid food 0)
+    (carrier-content carrier-mid medicine 0)
+
+    (carrier-at carrier-large depot)
+    (carrier-capacity carrier-large 20)
+    (carrier-total-load carrier-large 0)
+    (carrier-content carrier-large food 0)
+    (carrier-content carrier-large medicine 0)
+
+    (crates-at food depot 50)
+    (crates-at medicine depot 50)
+
+    (needs food loc1 7)
+    (needs medicine loc2 25)
+  )
+  (
+    (deliver-all)
+  )
+)
+
+(defproblem problem p3
+  (
+    (drone-at drone1 depot)
+    (empty-arm drone1 arm1)
+
+    (carrier-at carrier1 depot)
+    (carrier-capacity carrier1 10)
+    (carrier-total-load carrier1 0)
+    (carrier-content carrier1 food 0)
+    (carrier-content carrier1 medicine 0)
+
+    (crates-at food depot 20)
+    (crates-at medicine depot 20)
+
+    (needs food loc1 6)
+    (needs medicine loc1 2)
+    (needs food loc2 2)
+  )
+  (
+    (deliver-all)
+  )
+)

@@ -14,12 +14,10 @@ while True:
         program = subprocess.run(["python3","./generate_problems.py", "-d", "1", "-r", "0" ,"-l" ,f"{num[-1]}" ,"-p", f"{num[-1]}" ,"-c" ,f"{num[-1]}" ,"-g", f"{num[-1]}"], capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")
-        
-    subprocess.run("rm -f *.java *.class p1/*.java p1/*.class", shell=True)
     
     start = time.perf_counter()
     try:
-        result = subprocess.run(["./jshop2-console.sh", "p1", "p1/problem"], capture_output=True, text=True)
+        result = subprocess.run(["./jshop2-console.sh", "p1"], capture_output=True, text=True)
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")
