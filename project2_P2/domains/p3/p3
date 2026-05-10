@@ -93,14 +93,14 @@
        (needs ?type ?loc-to ?need))
       ((holding-arm ?drone ?arm ?type ?loc-to)
        (crates-at ?type ?loc-from (call - ?avail 1))
-       (needs ?type ?loc-to (call - ?need 1))) ; Rezerwuje zapotrzebowanie natychmiast
+       (needs ?type ?loc-to (call - ?need 1)))
     )
 
     (:operator (!drop-crate-arm ?type ?loc ?drone ?arm)
       ((drone-at ?drone ?loc)
        (holding-arm ?drone ?arm ?type ?loc))
       ((holding-arm ?drone ?arm ?type ?loc))
-      ((empty-arm ?drone ?arm)) ; Upuszcza i uwalnia ramię
+      ((empty-arm ?drone ?arm))
     )
 
     (:method (move-drone-alone ?drone ?loc-to)
@@ -192,7 +192,7 @@
       )
       (
         (!pick-up-crate-arm ?type depot ?loc ?drone ?arm)
-        (fill-arms ?drone) ; Rekurencja - szukaj kolejnych paczek do kolejnych wolnych ramion
+        (fill-arms ?drone)
       )
 
       no-more-needs
@@ -208,7 +208,7 @@
       (
         (move-drone-alone ?drone ?loc)
         (!drop-crate-arm ?type ?loc ?drone ?arm)
-        (dispatch-arms ?drone) ; Zrzuca i leci do następnego celu
+        (dispatch-arms ?drone)
       )
 
       all-delivered
@@ -216,7 +216,7 @@
         (not (holding-arm ?drone ?any-arm ?any-type ?any-loc))
       )
       (
-        (move-drone-alone ?drone depot) ; Wraca pusty do bazy
+        (move-drone-alone ?drone depot)
       )
     )
 
